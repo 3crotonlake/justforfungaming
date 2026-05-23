@@ -61,24 +61,42 @@ async function getCurrentUser() {
 }
 
 async function updateNav() {
-  const user = await getCurrentUser();
   const navRight = document.getElementById('nav-right');
   if (!navRight) return;
 
-  if (user) {
-    navRight.innerHTML = `
-      <span class="nav-user-name">
-        ${user.first_name}
-        <a href="reserve.html">Reserve a Table</a>
-        ${user.role === 'admin' ? '<a href="admin.html">Admin</a>' : ''}
-        <a href="#" id="logout-link">Log Out</a>
-      </span>`;
-    document.getElementById('logout-link')?.addEventListener('click', async e => {
-      e.preventDefault();
-      await getSupabase().auth.signOut();
-      window.location.href = 'index.html';
-    });
-  } else {
+  // Show loading state
+  navRight.innerHTML = '<span class="nav-phone">203-970-4873</span>';
+
+  try {
+    const sb = getSupabase();
+    if (!sb) throw new Error('no supabase');
+
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) throw new Error('no session');
+
+    const { data: profile } = await sb.from('members')
+      .select('*')
+      .eq('auth_id', session.user.id)
+      .single();
+
+    _currentUser = profile;
+
+    if (profile) {
+      navRight.innerHTML = `
+        <span class="nav-user-name">
+          ${profile.first_name}
+          ${profile.role === 'admin' ? '<a href="admin.html">Admin</a>' : '<a href="reserve.html">Reserve</a>'}
+          <a href="#" id="logout-link">Log Out</a>
+        </span>`;
+      document.getElementById('logout-link')?.addEventListener('click', async e => {
+        e.preventDefault();
+        await getSupabase().auth.signOut();
+        window.location.href = 'index.html';
+      });
+    } else {
+      throw new Error('no profile');
+    }
+  } catch(e) {
     navRight.innerHTML = `
       <span class="nav-phone">203-970-4873</span>
       <a href="login.html" class="btn-nav">Join / Log In</a>`;
