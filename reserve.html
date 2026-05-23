@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reserve a Table — Just for Fun Gaming</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .reserve-layout {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 1.5rem;
+      align-items: start;
+    }
+    /* CALENDAR */
+    .cal-card { background: var(--dark-card); border: 1px solid var(--border); }
+    .cal-header {
+      background: var(--dark-surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0.9rem 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .cal-month { font-family: 'Cinzel', serif; font-size: 1rem; color: var(--cream); }
+    .cal-nav {
+      font-size: 1.3rem; color: var(--gold); cursor: pointer;
+      background: none; border: none; padding: 0 0.25rem; line-height: 1;
+    }
+    .cal-nav:hover { color: var(--gold-light); }
+    .cal-grid { padding: 0.85rem; }
+    .cal-days-header {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      text-align: center;
+      margin-bottom: 0.4rem;
+    }
+    .cal-dn {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 0.25rem 0;
+    }
+    .cal-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+    .cal-day {
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.85rem;
+      color: var(--cream-dim);
+      cursor: pointer;
+      border-radius: 2px;
+      position: relative;
+      transition: all 0.15s;
+      user-select: none;
+    }
+    .cal-day.empty, .cal-day.closed, .cal-day.past { cursor: not-allowed; }
+    .cal-day.closed { color: rgba(138,128,112,0.3); }
+    .cal-day.past { color: rgba(138,128,112,0.25); }
+    .cal-day.available:hover { background: rgba(201,168,76,0.12); color: var(--gold); }
+    .cal-day.has-res::after {
+      content: '';
+      position: absolute;
+      bottom: 3px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 4px; height: 4px;
+      background: var(--blue-accent);
+      border-radius: 50%;
+    }
+    .cal-day.selected { background: var(--gold); color: var(--dark); font-weight: 700; }
+    .cal-day.today { outline: 1px solid rgba(201,168,76,0.45); }
+    .cal-legend {
+      display: flex;
+      gap: 1rem;
+      padding: 0.65rem 0.85rem;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .leg {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .leg-dot { width: 7px; height: 7px; border-radius: 50%; }
+
+    /* BOOKING PANEL */
+    .booking-card { background: var(--dark-card); border: 1px solid var(--border); }
+    .booking-header {
+      background: var(--dark-surface);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 1.25rem;
+    }
+    .booking-date-label { font-family: 'Cinzel', serif; font-size: 1.05rem; color: var(--cream); }
+    .booking-sub { font-size: 0.85rem; color: var(--text-muted); font-style: italic; margin-top: 0.2rem; }
+    .booking-body { padding: 1.25rem; }
+
+    /* TIME SLOTS */
+    .time-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.4rem; margin-top: 0.4rem; }
+    .ts {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.06em;
+      text-align: center;
+      padding: 0.5rem 0.25rem;
+      border: 1px solid var(--border-input);
+      cursor: pointer;
+      color: var(--cream-dim);
+      transition: all 0.15s;
+      user-select: none;
+    }
+    .ts:hover:not(.ts-taken) { border-color: rgba(201,168,76,0.4); color: var(--gold); }
+    .ts.ts-taken { color: rgba(138,128,112,0.3); cursor: not-allowed; text-decoration: line-through; }
+    .ts.ts-selected { background: var(--gold); color: var(--dark); font-weight: 700; border-color: var(--gold); }
+
+    /* TABLES */
+    .table-opt {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.7rem;
+      border: 1px solid var(--border-input);
+      margin-bottom: 0.4rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .table-opt:hover:not(.tbl-taken) { border-color: rgba(201,168,76,0.4); background: rgba(201,168,76,0.03); }
+    .table-opt.tbl-selected { border-color: var(--gold); background: rgba(201,168,76,0.07); }
+    .table-opt.tbl-taken { opacity: 0.38; cursor: not-allowed; }
+    .tbl-icon { font-size: 1.3rem; flex-shrink: 0; width: 26px; text-align: center; }
+    .tbl-info { flex: 1; min-width: 0; }
+    .tbl-name { font-family: 'Barlow Condensed', sans-serif; font-size: 0.8rem; letter-spacing: 0.04em; color: var(--cream); }
+    .tbl-desc { font-size: 0.78rem; color: var(--text-muted); font-style: italic; }
+    .tbl-avail { font-family: 'Barlow Condensed', sans-serif; font-size: 0.68rem; letter-spacing: 0.08em; flex-shrink: 0; }
+    .avail-y { color: var(--green); }
+    .avail-n { color: var(--red-bright); }
+
+    .btn-reserve {
+      display: block;
+      width: 100%;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      font-weight: 700;
+      background: var(--gold);
+      color: var(--dark);
+      border: none;
+      padding: 0.85rem;
+      cursor: pointer;
+      margin-top: 1.1rem;
+      transition: background 0.2s;
+    }
+    .btn-reserve:hover:not(:disabled) { background: var(--gold-light); }
+    .btn-reserve:disabled { background: rgba(201,168,76,0.3); color: rgba(13,15,20,0.5); cursor: not-allowed; }
+    .reserve-note { font-size: 0.8rem; color: var(--text-muted); font-style: italic; text-align: center; margin-top: 0.5rem; }
+
+    /* MY RESERVATIONS */
+    .my-res-item {
+      background: var(--dark-card);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--gold);
+      padding: 0.9rem 1.1rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .res-date-block { text-align: center; min-width: 44px; flex-shrink: 0; }
+    .res-month { font-family: 'Barlow Condensed', sans-serif; font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); }
+    .res-day { font-family: 'Cinzel', serif; font-size: 1.5rem; color: var(--cream); line-height: 1; }
+    .res-info { flex: 1; }
+    .res-title { font-family: 'Barlow Condensed', sans-serif; font-size: 0.82rem; letter-spacing: 0.04em; color: var(--cream); }
+    .res-detail { font-size: 0.82rem; color: var(--text-muted); font-style: italic; }
+    .res-cancel { font-family: 'Barlow Condensed', sans-serif; font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); cursor: pointer; text-decoration: none; flex-shrink: 0; }
+    .res-cancel:hover { color: var(--red-bright); }
+
+    @media (max-width: 700px) {
+      .reserve-layout { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a href="index.html" class="nav-logo">Just <span>for</span> Fun<br>GAMING</a>
+  <ul class="nav-links">
+    <li><a href="index.html#games">Games</a></li>
+    <li><a href="index.html#news">News</a></li>
+    <li><a href="blog.html">Blog</a></li>
+    <li><a href="reserve.html" class="active">Reserve a Table</a></li>
+    <li><a href="index.html#contact">Contact</a></li>
+  </ul>
+  <div class="nav-right" id="nav-right"></div>
+  <button class="nav-hamburger" id="hamburger"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile-menu" id="mobile-menu">
+  <a href="index.html">Home</a>
+  <a href="blog.html">Blog</a>
+  <a href="reserve.html">Reserve a Table</a>
+  <a href="index.html#contact">Contact</a>
+</div>
+
+<div class="page-wrap">
+  <p class="page-eyebrow">Members · Table Booking</p>
+  <h1 class="page-title">Reserve a Table</h1>
+
+  <div id="login-prompt" style="display:none; text-align:center; padding:3rem 1rem; background:var(--dark-card); border:1px solid var(--border); margin-bottom:2rem;">
+    <p style="font-size:1.1rem; font-style:italic; color:var(--cream-dim); margin-bottom:1.25rem;">You need a free account to reserve a table.</p>
+    <a href="login.html" class="btn-primary">Join or Log In</a>
+  </div>
+
+  <div id="reserve-ui">
+    <div class="reserve-layout">
+      <!-- CALENDAR -->
+      <div>
+        <div class="cal-card">
+          <div class="cal-header">
+            <button class="cal-nav" onclick="changeMonth(-1)">‹</button>
+            <div class="cal-month" id="cal-month-label"></div>
+            <button class="cal-nav" onclick="changeMonth(1)">›</button>
+          </div>
+          <div class="cal-grid">
+            <div class="cal-days-header">
+              <div class="cal-dn">Su</div><div class="cal-dn">Mo</div>
+              <div class="cal-dn">Tu</div><div class="cal-dn">We</div>
+              <div class="cal-dn">Th</div><div class="cal-dn">Fr</div>
+              <div class="cal-dn">Sa</div>
+            </div>
+            <div class="cal-days" id="cal-days"></div>
+          </div>
+          <div class="cal-legend">
+            <div class="leg"><div class="leg-dot" style="background:var(--gold)"></div> Selected</div>
+            <div class="leg"><div class="leg-dot" style="background:var(--blue-accent)"></div> Your booking</div>
+            <div class="leg"><div class="leg-dot" style="background:rgba(138,128,112,0.4)"></div> Closed</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOOKING PANEL -->
+      <div>
+        <div class="booking-card">
+          <div class="booking-header">
+            <div class="booking-date-label" id="booking-date-label">Select a date</div>
+            <div class="booking-sub" id="booking-sub">Choose any open day on the calendar</div>
+          </div>
+          <div class="booking-body" id="booking-body">
+            <div style="text-align:center; padding:2.5rem 0; color:var(--text-muted); font-style:italic;">
+              Pick a date on the calendar to see available times and tables.
+            </div>
+          </div>
+        </div>
+
+        <div id="my-reservations-section" style="margin-top:2rem;">
+          <h2 style="font-family:'Cinzel',serif; font-size:1.15rem; color:var(--cream); border-bottom:1px solid var(--border); padding-bottom:0.5rem; margin-bottom:1rem;">
+            Your Upcoming Reservations
+          </h2>
+          <div id="my-reservations-list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-logo">Just <span>for</span> Fun Gaming</div>
+  <div class="footer-details">130 Federal Road · Danbury, CT 06811 · <a href="tel:2039704873">203-970-4873</a><br>
+    Tue–Fri 4:30–10 PM · Sat–Sun 3–10 PM · Closed Mondays</div>
+  <div class="footer-copy">© 2026 Just for Fun Gaming LLC</div>
+</footer>
+
+<script src="js/main.js"></script>
+<script>
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const TIMES  = ['4:30 PM','5:00 PM','5:30 PM','6:00 PM','6:30 PM','7:00 PM','7:30 PM','8:00 PM','8:30 PM','9:00 PM'];
+const TAKEN_SLOTS = { '2026-05-22': ['5:00 PM','6:30 PM','7:00 PM'], '2026-05-23': ['3:00 PM','4:00 PM'] };
+
+let curYear = 2026, curMonth = 4, selDay = null, selTime = null, selTable = null;
+
+function todayStr() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function dateStr(y, m, d) {
+  return `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+}
+
+function renderCalendar() {
+  document.getElementById('cal-month-label').textContent = MONTHS[curMonth] + ' ' + curYear;
+  const container = document.getElementById('cal-days');
+  container.innerHTML = '';
+  const firstDay = new Date(curYear, curMonth, 1).getDay();
+  const daysInMonth = new Date(curYear, curMonth+1, 0).getDate();
+  const today = new Date();
+  const user = Auth.get();
+  const myDates = user ? MockData.getUserReservations(user.id).map(r => r.date) : [];
+
+  for (let i = 0; i < firstDay; i++) {
+    const el = document.createElement('div');
+    el.className = 'cal-day empty';
+    container.appendChild(el);
+  }
+  for (let d = 1; d <= daysInMonth; d++) {
+    const el = document.createElement('div');
+    const date = new Date(curYear, curMonth, d);
+    const dow = date.getDay();
+    const ds = dateStr(curYear, curMonth, d);
+    const isPast = date < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const isMon = dow === 1;
+    const isToday = ds === todayStr();
+    const hasRes = myDates.includes(ds);
+    const isSel = (d === selDay && curMonth === curMonth && curYear === curYear);
+
+    let cls = 'cal-day';
+    if (isMon) cls += ' closed';
+    else if (isPast) cls += ' past';
+    else { cls += ' available'; if (hasRes) cls += ' has-res'; }
+    if (isToday) cls += ' today';
+    if (isSel && selDay === d) cls += ' selected';
+
+    el.className = cls;
+    el.textContent = d;
+    if (!isMon && !isPast) el.onclick = () => selectDay(d);
+    container.appendChild(el);
+  }
+}
+
+function selectDay(d) {
+  selDay = d; selTime = null; selTable = null;
+  renderCalendar();
+  const ds = dateStr(curYear, curMonth, d);
+  const date = new Date(curYear, curMonth, d);
+  const label = date.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric', year:'numeric' });
+  document.getElementById('booking-date-label').textContent = label;
+  document.getElementById('booking-sub').textContent = 'Pick a time and table, then confirm';
+  renderBookingPanel(ds);
+}
+
+function renderBookingPanel(ds) {
+  const takenTimes = TAKEN_SLOTS[ds] || [];
+  const body = document.getElementById('booking-body');
+
+  body.innerHTML = `
+    <div class="form-group">
+      <label class="form-label">Game you'll be playing</label>
+      <select class="form-select" id="bp-game">
+        <option value="">— Select a game —</option>
+        <option>Warhammer 40,000</option>
+        <option>Horus Heresy</option>
+        <option>Age of Sigmar</option>
+        <option>BattleTech</option>
+        <option>D&D / Pathfinder</option>
+        <option>Dropfleet Commander</option>
+        <option>Kings of War</option>
+        <option>Magic: The Gathering</option>
+        <option>Pokémon</option>
+        <option>Lorcana</option>
+        <option>Board Game</option>
+        <option>Other / Not sure yet</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Players</label>
+        <select class="form-select" id="bp-players">
+          <option>1</option><option>2</option><option>3</option>
+          <option>4</option><option>5</option><option>6</option>
+          <option>7</option><option>8+</option>
+        </select>
+      </div>
+      <div style=""></div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Start time</label>
+      <div class="time-grid" id="time-grid">
+        ${TIMES.map(t => {
+          const taken = takenTimes.includes(t);
+          return `<div class="ts${taken?' ts-taken':''}" onclick="selectTime(this,'${t}')">${t}</div>`;
+        }).join('')}
+      </div>
+    </div>
+    <div class="form-group" id="tables-section" style="display:none;">
+      <label class="form-label">Choose a table</label>
+      <div id="tables-list"></div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Notes for Toby <span style="color:var(--text-muted);font-size:0.8em;">(optional)</span></label>
+      <input class="form-input" type="text" id="bp-notes" placeholder="e.g. first time, need terrain help, bringing own minis">
+    </div>
+    <button class="btn-reserve" id="btn-reserve" disabled onclick="confirmReservation('${ds}')">Select a Time &amp; Table to Continue</button>
+    <div class="reserve-note">Free to reserve · Cancel any time · Just show up and play</div>
+  `;
+}
+
+function selectTime(el, t) {
+  if (el.classList.contains('ts-taken')) return;
+  document.querySelectorAll('.ts').forEach(s => s.classList.remove('ts-selected'));
+  el.classList.add('ts-selected');
+  selTime = t;
+  renderTables();
+}
+
+function renderTables() {
+  const ds = dateStr(curYear, curMonth, selDay);
+  const takenTimes = TAKEN_SLOTS[ds] || [];
+  const tablesSection = document.getElementById('tables-section');
+  const tablesList = document.getElementById('tables-list');
+  if (!tablesSection || !tablesList) return;
+  tablesSection.style.display = 'block';
+
+  // For demo: table 2 is taken on 5/22 at 7pm
+  const takenTableIds = (ds === '2026-05-22' && selTime === '7:00 PM') ? [2] : [];
+
+  tablesList.innerHTML = MockData.tables.map(t => {
+    const taken = takenTableIds.includes(t.id);
+    return `
+      <div class="table-opt${taken?' tbl-taken':''}" id="tbl-${t.id}" onclick="selectTable(${t.id},${!taken})">
+        <div class="tbl-icon">${t.icon}</div>
+        <div class="tbl-info">
+          <div class="tbl-name">${t.name}</div>
+          <div class="tbl-desc">${t.desc}</div>
+        </div>
+        <div class="tbl-avail ${taken?'avail-n':'avail-y'}">${taken?'Taken':'Open'}</div>
+      </div>`;
+  }).join('');
+
+  updateReserveBtn();
+}
+
+function selectTable(id, avail) {
+  if (!avail) return;
+  document.querySelectorAll('.table-opt').forEach(el => el.classList.remove('tbl-selected'));
+  const el = document.getElementById('tbl-' + id);
+  if (el) el.classList.add('tbl-selected');
+  selTable = id;
+  updateReserveBtn();
+}
+
+function updateReserveBtn() {
+  const btn = document.getElementById('btn-reserve');
+  if (!btn) return;
+  if (selTime && selTable) {
+    btn.disabled = false;
+    btn.textContent = 'Confirm Reservation';
+  } else {
+    btn.disabled = true;
+    btn.textContent = selTime ? 'Choose a Table to Continue' : 'Select a Time & Table to Continue';
+  }
+}
+
+function confirmReservation(ds) {
+  const user = Auth.get();
+  const game = document.getElementById('bp-game')?.value || 'Game TBD';
+  const players = document.getElementById('bp-players')?.value || '2';
+  const notes = document.getElementById('bp-notes')?.value || '';
+  const table = MockData.tables.find(t => t.id === selTable);
+
+  MockData.addReservation({
+    memberId: user.id,
+    memberName: user.firstName + ' ' + user.lastName,
+    tableId: selTable,
+    date: ds,
+    time: selTime,
+    game: game || 'TBD',
+    players: parseInt(players),
+    notes
+  });
+
+  const btn = document.getElementById('btn-reserve');
+  btn.textContent = '✓ Table Reserved!';
+  btn.style.background = '#3A7D44';
+  btn.style.color = 'var(--cream)';
+  btn.disabled = true;
+
+  showFlash('You\'re booked! See you ' + formatShort(ds) + ' at ' + selTime + '.');
+  selDay = null; selTime = null; selTable = null;
+  setTimeout(() => { renderCalendar(); renderMyReservations(); }, 1200);
+}
+
+function renderMyReservations() {
+  const user = Auth.get();
+  const container = document.getElementById('my-reservations-list');
+  if (!container || !user) return;
+
+  const upcoming = MockData.getUserReservations(user.id)
+    .filter(r => r.date >= todayStr())
+    .sort((a, b) => a.date.localeCompare(b.date));
+
+  if (upcoming.length === 0) {
+    container.innerHTML = '<p style="color:var(--text-muted); font-style:italic; font-size:0.9rem;">No upcoming reservations. Pick a date above to book a table!</p>';
+    return;
+  }
+
+  container.innerHTML = upcoming.map(r => {
+    const d = new Date(r.date + 'T12:00:00');
+    const month = d.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
+    const day = d.getDate();
+    const table = MockData.tables.find(t => t.id === r.tableId);
+    return `
+      <div class="my-res-item">
+        <div class="res-date-block">
+          <div class="res-month">${month}</div>
+          <div class="res-day">${day}</div>
+        </div>
+        <div class="res-info">
+          <div class="res-title">${table ? table.name : 'Table'} · ${r.time}</div>
+          <div class="res-detail">${r.game}${r.players ? ' · ' + r.players + ' players' : ''}${r.notes ? ' · ' + r.notes : ''}</div>
+        </div>
+        <a href="#" class="res-cancel" onclick="cancelRes(${r.id}); return false;">Cancel</a>
+      </div>`;
+  }).join('');
+}
+
+function cancelRes(id) {
+  const idx = MockData.reservations.findIndex(r => r.id === id);
+  if (idx > -1) {
+    MockData.reservations.splice(idx, 1);
+    showFlash('Reservation cancelled.');
+    renderMyReservations();
+    renderCalendar();
+  }
+}
+
+function changeMonth(dir) {
+  curMonth += dir;
+  if (curMonth < 0) { curMonth = 11; curYear--; }
+  if (curMonth > 11) { curMonth = 0; curYear++; }
+  selDay = null;
+  renderCalendar();
+  document.getElementById('booking-date-label').textContent = 'Select a date';
+  document.getElementById('booking-sub').textContent = 'Choose any open day on the calendar';
+  document.getElementById('booking-body').innerHTML = '<div style="text-align:center;padding:2.5rem 0;color:var(--text-muted);font-style:italic;">Pick a date on the calendar to see available times and tables.</div>';
+}
+
+// INIT
+document.addEventListener('DOMContentLoaded', () => {
+  const user = Auth.get();
+  if (!user) {
+    document.getElementById('login-prompt').style.display = 'block';
+    document.getElementById('reserve-ui').style.display = 'none';
+  } else {
+    renderCalendar();
+    renderMyReservations();
+  }
+});
+</script>
+</body>
+</html>

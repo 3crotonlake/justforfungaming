@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Join / Log In — Just for Fun Gaming</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .auth-page {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 1rem;
+      background: radial-gradient(ellipse at 50% 30%, #1a2040 0%, var(--dark) 65%);
+    }
+    .auth-card {
+      background: var(--dark-card);
+      border: 1px solid var(--border);
+      width: 100%;
+      max-width: 440px;
+      animation: fadeUp 0.4s ease both;
+    }
+    .auth-card-header {
+      background: var(--dark-surface);
+      border-bottom: 1px solid var(--border);
+      padding: 1.75rem 2rem 1.5rem;
+      text-align: center;
+    }
+    .auth-store-badge {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.75rem;
+    }
+    .auth-heading {
+      font-family: 'Cinzel', serif;
+      font-size: 1.6rem;
+      color: var(--cream);
+    }
+    .auth-sub {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      font-style: italic;
+      margin-top: 0.35rem;
+    }
+    .tab-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-bottom: 1px solid var(--border);
+    }
+    .tab-btn {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.85rem;
+      text-align: center;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+    }
+    .tab-btn.active {
+      color: var(--gold);
+      border-bottom-color: var(--gold);
+      background: rgba(201,168,76,0.05);
+    }
+    .panel { display: none; }
+    .panel.active { display: block; }
+    .auth-body { padding: 1.75rem 2rem; }
+    .games-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.4rem;
+      margin-top: 0.4rem;
+    }
+    .game-check {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.88rem;
+      color: var(--cream-dim);
+    }
+    .game-check input { accent-color: var(--gold); }
+    .btn-submit {
+      display: block;
+      width: 100%;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.88rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      font-weight: 700;
+      background: var(--gold);
+      color: var(--dark);
+      border: none;
+      padding: 0.85rem;
+      cursor: pointer;
+      margin-top: 0.5rem;
+      transition: background 0.2s;
+    }
+    .btn-submit:hover { background: var(--gold-light); }
+    .divider-or {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin: 1.25rem 0;
+    }
+    .divider-or::before, .divider-or::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    .divider-or span {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .btn-google {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      width: 100%;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.82rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: transparent;
+      color: var(--cream-dim);
+      border: 1px solid var(--border-input);
+      padding: 0.75rem;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    .btn-google:hover { border-color: rgba(242,234,211,0.35); color: var(--cream); }
+    .auth-footer-note {
+      text-align: center;
+      padding: 1rem 2rem 1.5rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+    .auth-footer-note a { color: var(--gold); text-decoration: none; }
+
+    /* Demo login shortcuts */
+    .demo-logins {
+      margin-top: 1.25rem;
+      padding: 1rem;
+      background: rgba(201,168,76,0.05);
+      border: 1px dashed rgba(201,168,76,0.25);
+    }
+    .demo-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.62rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+    }
+    .demo-btn {
+      display: block;
+      width: 100%;
+      margin-bottom: 0.4rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: transparent;
+      color: var(--cream-dim);
+      border: 1px solid var(--border-input);
+      padding: 0.5rem;
+      cursor: pointer;
+      text-align: left;
+      transition: border-color 0.2s;
+    }
+    .demo-btn:hover { border-color: var(--gold); color: var(--cream); }
+  </style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a href="index.html" class="nav-logo">Just <span>for</span> Fun<br>GAMING</a>
+  <ul class="nav-links">
+    <li><a href="index.html#games">Games</a></li>
+    <li><a href="index.html#news">News</a></li>
+    <li><a href="blog.html">Blog</a></li>
+    <li><a href="reserve.html">Reserve a Table</a></li>
+    <li><a href="index.html#contact">Contact</a></li>
+  </ul>
+  <div class="nav-right" id="nav-right">
+    <a href="index.html" class="btn-gold-outline" style="width:auto;">← Back to Home</a>
+  </div>
+  <button class="nav-hamburger" id="hamburger"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="nav-mobile-menu" id="mobile-menu">
+  <a href="index.html">Home</a>
+  <a href="blog.html">Blog</a>
+  <a href="reserve.html">Reserve a Table</a>
+</div>
+
+<div class="auth-page grid-bg">
+  <div class="auth-card">
+    <div class="auth-card-header">
+      <div class="auth-store-badge">Just for Fun Gaming · Danbury, CT</div>
+      <div class="auth-heading" id="auth-heading">Join the Community</div>
+      <div class="auth-sub" id="auth-sub">Create your free member account</div>
+    </div>
+
+    <div class="tab-row">
+      <button class="tab-btn active" id="tab-signup" onclick="switchTab('signup')">Sign Up</button>
+      <button class="tab-btn" id="tab-login" onclick="switchTab('login')">Log In</button>
+    </div>
+
+    <!-- SIGNUP PANEL -->
+    <div class="panel active" id="panel-signup">
+      <div class="auth-body">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">First Name</label>
+            <input class="form-input" type="text" id="signup-first" placeholder="e.g. Alex">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Last Name</label>
+            <input class="form-input" type="text" id="signup-last" placeholder="e.g. Smith">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input class="form-input" type="email" id="signup-email" placeholder="you@example.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input class="form-input" type="password" id="signup-password" placeholder="8+ characters">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Games I play <span style="color:var(--text-muted); font-size:0.8em;">(pick all that apply)</span></label>
+          <div class="games-grid">
+            <label class="game-check"><input type="checkbox" name="game" value="40K"> Warhammer 40K</label>
+            <label class="game-check"><input type="checkbox" name="game" value="D&D"> D&amp;D / Pathfinder</label>
+            <label class="game-check"><input type="checkbox" name="game" value="BattleTech"> BattleTech</label>
+            <label class="game-check"><input type="checkbox" name="game" value="Card"> Magic / Pokémon</label>
+            <label class="game-check"><input type="checkbox" name="game" value="Board"> Board Games</label>
+            <label class="game-check"><input type="checkbox" name="game" value="New"> I'm new — teach me!</label>
+          </div>
+          <div class="form-hint">Helps Toby plan events and stock the right games.</div>
+        </div>
+        <div class="checkbox-row">
+          <input type="checkbox" id="newsletter-opt" checked>
+          <label class="checkbox-label" for="newsletter-opt">Sign me up for the Just for Fun Gaming newsletter — events, new arrivals, and store news.</label>
+        </div>
+        <button class="btn-submit" onclick="handleSignup()">Create My Account</button>
+        <div class="divider-or"><span>or</span></div>
+        <button class="btn-google" onclick="handleDemoLogin('member')">
+          <span style="font-size:1.1rem;">🎲</span> Continue as Demo Member
+        </button>
+      </div>
+      <div class="auth-footer-note">Already have an account? <a href="#" onclick="switchTab('login'); return false;">Log in here</a></div>
+    </div>
+
+    <!-- LOGIN PANEL -->
+    <div class="panel" id="panel-login">
+      <div class="auth-body">
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input class="form-input" type="email" id="login-email" placeholder="you@example.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input class="form-input" type="password" id="login-password" placeholder="Your password">
+          <div class="form-hint"><a href="#" style="color:var(--gold); text-decoration:none;">Forgot your password?</a></div>
+        </div>
+        <button class="btn-submit" style="margin-top:1rem;" onclick="handleLogin()">Log In</button>
+
+        <div class="demo-logins">
+          <div class="demo-label">⚡ Demo Shortcuts</div>
+          <button class="demo-btn" onclick="handleDemoLogin('member')">🎲 Log in as a Member (Evan)</button>
+          <button class="demo-btn" onclick="handleDemoLogin('admin')">🔑 Log in as Admin (Toby)</button>
+        </div>
+      </div>
+      <div class="auth-footer-note">New here? <a href="#" onclick="switchTab('signup'); return false;">Create a free account</a></div>
+    </div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-logo">Just <span>for</span> Fun Gaming</div>
+  <div class="footer-details">130 Federal Road · Danbury, CT 06811 · <a href="tel:2039704873">203-970-4873</a></div>
+  <div class="footer-copy">© 2026 Just for Fun Gaming LLC</div>
+</footer>
+
+<script src="js/main.js"></script>
+<script>
+  // If already logged in, redirect
+  if (Auth.isLoggedIn()) {
+    window.location.href = Auth.isAdmin() ? 'admin.html' : 'reserve.html';
+  }
+
+  function switchTab(tab) {
+    document.getElementById('tab-signup').classList.toggle('active', tab === 'signup');
+    document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+    document.getElementById('panel-signup').classList.toggle('active', tab === 'signup');
+    document.getElementById('panel-login').classList.toggle('active', tab === 'login');
+    document.getElementById('auth-heading').textContent = tab === 'signup' ? 'Join the Community' : 'Welcome Back';
+    document.getElementById('auth-sub').textContent = tab === 'signup' ? 'Create your free member account' : 'Log in to your member account';
+  }
+
+  function handleSignup() {
+    const first = document.getElementById('signup-first').value.trim();
+    const last  = document.getElementById('signup-last').value.trim();
+    const email = document.getElementById('signup-email').value.trim();
+    if (!first || !email) { showFlash('Please fill in your name and email.', 'error'); return; }
+    const games = [...document.querySelectorAll('input[name="game"]:checked')].map(c => c.value);
+    const newsletter = document.getElementById('newsletter-opt').checked;
+    const user = { id: 99, firstName: first, lastName: last, email, games, newsletter, role: 'member' };
+    Auth.set(user);
+    showFlash('Welcome, ' + first + '! Account created.');
+    setTimeout(() => window.location.href = 'reserve.html', 1200);
+  }
+
+  function handleLogin() {
+    const email = document.getElementById('login-email').value.trim();
+    // Find in mock data
+    const found = MockData.members.find(m => m.email === email);
+    if (found) {
+      Auth.set(found);
+      showFlash('Welcome back, ' + found.firstName + '!');
+      setTimeout(() => window.location.href = found.role === 'admin' ? 'admin.html' : 'reserve.html', 1000);
+    } else {
+      showFlash('Email not found. Try a demo shortcut below.', 'error');
+    }
+  }
+
+  function handleDemoLogin(role) {
+    const user = role === 'admin'
+      ? MockData.members.find(m => m.role === 'admin')
+      : { id: 6, firstName: 'Evan', lastName: 'B.', email: 'evan@example.com', games: ['Board'], newsletter: true, role: 'member' };
+    Auth.set(user);
+    showFlash('Logged in as ' + user.firstName + (role === 'admin' ? ' (Admin)' : '') + '!');
+    setTimeout(() => window.location.href = role === 'admin' ? 'admin.html' : 'reserve.html', 1000);
+  }
+</script>
+</body>
+</html>

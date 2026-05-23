@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard — Just for Fun Gaming</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; margin-bottom: 1.75rem; }
+    .stat-card { background: var(--dark-card); border: 1px solid var(--border); padding: 1rem 1.1rem; }
+    .stat-label { font-family: 'Barlow Condensed', sans-serif; font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.35rem; }
+    .stat-value { font-family: 'Cinzel', serif; font-size: 2rem; line-height: 1; }
+    .stat-sub { font-size: 0.78rem; color: var(--text-muted); font-style: italic; margin-top: 0.25rem; }
+    .admin-layout { display: grid; grid-template-columns: 1fr 290px; gap: 1.5rem; align-items: start; }
+    .sec-title {
+      font-family: 'Cinzel', serif; font-size: 1rem; color: var(--cream);
+      border-bottom: 1px solid var(--border); padding-bottom: 0.45rem;
+      margin-bottom: 0.85rem; display: flex; align-items: center; justify-content: space-between;
+    }
+    .sec-action { font-family: 'Barlow Condensed', sans-serif; font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); text-decoration: none; cursor: pointer; }
+    .sk { background: var(--dark-card); border: 1px solid var(--border); margin-bottom: 0.85rem; }
+    .sk-head { background: var(--dark-surface); border-bottom: 1px solid var(--border); padding: 0.8rem 1rem; font-family: 'Cinzel', serif; font-size: 0.9rem; color: var(--cream); }
+    .sk-body { padding: 1rem; }
+    .ti { display: flex; align-items: center; gap: 0.6rem; padding: 0.45rem 0; border-bottom: 1px solid rgba(201,168,76,0.07); }
+    .ti:last-child { border-bottom: none; }
+    .tic { font-size: 1.1rem; width: 24px; text-align: center; flex-shrink: 0; }
+    .ti-info { flex: 1; min-width: 0; }
+    .ti-name { font-family: 'Barlow Condensed', sans-serif; font-size: 0.75rem; letter-spacing: 0.04em; color: var(--cream); }
+    .ti-sub { font-size: 0.75rem; color: var(--text-muted); font-style: italic; }
+    .em { display: flex; align-items: center; justify-content: space-between; padding: 0.4rem 0; border-bottom: 1px solid rgba(201,168,76,0.07); }
+    .em:last-child { border-bottom: none; }
+    .em-n { font-size: 0.87rem; color: var(--cream); }
+    .em-g { font-family: 'Barlow Condensed', sans-serif; font-size: 0.6rem; letter-spacing: 0.08em; color: var(--text-muted); }
+    .em-ok { color: var(--green); font-size: 0.8rem; }
+    .btn-exp { display: block; width: 100%; font-family: 'Barlow Condensed', sans-serif; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 700; background: transparent; color: var(--gold); border: 1px solid var(--border); padding: 0.6rem; cursor: pointer; margin-top: 0.65rem; text-align: center; }
+    .btn-exp:hover { background: rgba(201,168,76,0.07); }
+    .btn-cmp { display: block; width: 100%; font-family: 'Barlow Condensed', sans-serif; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 700; background: var(--gold); color: var(--dark); border: none; padding: 0.6rem; cursor: pointer; margin-top: 0.35rem; }
+    .btn-cmp:hover { background: var(--gold-light); }
+    .admin-badge { font-family: 'Barlow Condensed', sans-serif; font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; background: var(--red); color: var(--cream); padding: 0.18rem 0.5rem; margin-left: 0.5rem; vertical-align: middle; }
+    @media (max-width: 700px) {
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      .admin-layout { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div style="display:flex;align-items:center;">
+    <a href="index.html" class="nav-logo">Just <span>for</span> Fun<br>GAMING</a>
+    <span class="admin-badge">Admin</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="index.html">View Site</a></li>
+    <li><a href="reserve.html">Calendar</a></li>
+    <li><a href="blog.html">Blog</a></li>
+  </ul>
+  <div class="nav-right" id="nav-right"></div>
+  <button class="nav-hamburger" id="hamburger"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile-menu" id="mobile-menu">
+  <a href="index.html">View Site</a>
+  <a href="reserve.html">Calendar</a>
+  <a href="blog.html">Blog</a>
+</div>
+
+<div id="access-denied" style="display:none; text-align:center; padding:4rem 2rem;">
+  <p style="font-size:1.1rem; color:var(--cream-dim); font-style:italic; margin-bottom:1.25rem;">Admin access only. Please log in as Toby.</p>
+  <a href="login.html" class="btn-primary">Log In</a>
+</div>
+
+<div class="page-wrap" id="admin-ui">
+  <p class="page-eyebrow">Store Management</p>
+  <div class="page-title" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;">
+    Dashboard
+    <span style="font-family:'Barlow Condensed',sans-serif; font-size:0.72rem; letter-spacing:0.08em; color:var(--text-muted);" id="today-label"></span>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-label">Members</div><div class="stat-value" style="color:var(--gold)" id="stat-members">—</div><div class="stat-sub" id="stat-members-sub"></div></div>
+    <div class="stat-card"><div class="stat-label">Newsletter subscribers</div><div class="stat-value" style="color:var(--blue-accent)" id="stat-newsletter">—</div><div class="stat-sub">opt-in members</div></div>
+    <div class="stat-card"><div class="stat-label">Total reservations</div><div class="stat-value" style="color:var(--green)" id="stat-reservations">—</div><div class="stat-sub">upcoming bookings</div></div>
+    <div class="stat-card"><div class="stat-label">Tables open tonight</div><div class="stat-value" style="color:var(--amber)" id="stat-open">—</div><div class="stat-sub">of 5 available</div></div>
+  </div>
+
+  <div class="admin-layout">
+    <!-- MAIN CONTENT -->
+    <div>
+      <div class="sec-title">
+        Upcoming Reservations
+        <a class="sec-action" onclick="exportCSV()">Export CSV →</a>
+      </div>
+      <table class="data-table" id="res-table">
+        <thead>
+          <tr>
+            <th>Date &amp; Time</th>
+            <th>Member</th>
+            <th>Table</th>
+            <th>Game</th>
+            <th>Players</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody id="res-tbody"></tbody>
+      </table>
+
+      <div style="margin-top:1.75rem;">
+        <div class="sec-title">
+          Member Directory
+          <a class="sec-action" onclick="exportMembers()">Export →</a>
+        </div>
+        <table class="data-table">
+          <thead>
+            <tr><th>Name</th><th>Email</th><th>Joined</th><th>Plays</th><th>Newsletter</th></tr>
+          </thead>
+          <tbody id="members-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <div>
+      <!-- TONIGHT'S TABLES -->
+      <div class="sk">
+        <div class="sk-head">Tonight's Tables</div>
+        <div class="sk-body" id="tables-tonight"></div>
+      </div>
+
+      <!-- NEWSLETTER -->
+      <div class="sk">
+        <div class="sk-head">Newsletter</div>
+        <div class="sk-body">
+          <div style="font-family:'Barlow Condensed',sans-serif; font-size:0.62rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.5rem;" id="nl-meta"></div>
+          <div id="nl-members"></div>
+          <button class="btn-exp" onclick="exportCSV()">Export Email List (CSV)</button>
+          <button class="btn-cmp" onclick="composeNewsletter()">Compose Newsletter →</button>
+        </div>
+      </div>
+
+      <!-- QUICK LINKS -->
+      <div class="sk">
+        <div class="sk-head">Quick Actions</div>
+        <div class="sk-body" style="display:flex;flex-direction:column;gap:0.4rem;">
+          <a href="index.html" class="btn-gold-outline">View Public Site</a>
+          <a href="reserve.html" class="btn-gold-outline">View Reservation Calendar</a>
+          <a href="blog.html" class="btn-gold-outline">Manage Blog</a>
+          <a href="login.html" class="btn-gold-outline" id="logout-btn">Log Out</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-logo">Just <span>for</span> Fun Gaming</div>
+  <div class="footer-details">Admin Panel · 130 Federal Road · Danbury, CT 06811</div>
+  <div class="footer-copy">© 2026 Just for Fun Gaming LLC</div>
+</footer>
+
+<script src="js/main.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const user = Auth.get();
+  if (!user || user.role !== 'admin') {
+    document.getElementById('admin-ui').style.display = 'none';
+    document.getElementById('access-denied').style.display = 'block';
+    return;
+  }
+
+  // Today label
+  const now = new Date();
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  document.getElementById('today-label').textContent =
+    days[now.getDay()] + ', ' + now.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}) +
+    ' · ' + (now.getDay() === 1 ? 'Closed today' : 'Open today 4:30–10 PM');
+
+  // Stats
+  const members = MockData.members.filter(m => m.role !== 'admin');
+  const nlCount = members.filter(m => m.newsletter).length;
+  const upcoming = MockData.reservations.filter(r => r.date >= todayStr());
+  const tonightStr = '2026-05-22';
+  const tonightRes = MockData.reservations.filter(r => r.date === tonightStr);
+  const takenTonight = [...new Set(tonightRes.map(r => r.tableId))];
+  const openTonight = MockData.tables.length - takenTonight.length;
+
+  document.getElementById('stat-members').textContent = members.length;
+  document.getElementById('stat-members-sub').textContent = 'joined this week: ' + members.filter(m => m.joined?.includes('May')).length;
+  document.getElementById('stat-newsletter').textContent = nlCount;
+  document.getElementById('stat-reservations').textContent = upcoming.length;
+  document.getElementById('stat-open').textContent = openTonight;
+
+  // Reservations table
+  const tbody = document.getElementById('res-tbody');
+  tbody.innerHTML = upcoming
+    .sort((a,b) => a.date.localeCompare(b.date) || a.time.localeCompare(b.time))
+    .map(r => {
+      const d = new Date(r.date + 'T12:00:00');
+      const dateLabel = d.toLocaleDateString('en-US', {weekday:'short', month:'short', day:'numeric'}) + ' · ' + r.time;
+      const table = MockData.tables.find(t => t.id === r.tableId);
+      return `<tr>
+        <td>${dateLabel}</td>
+        <td class="strong">${r.memberName}</td>
+        <td style="font-size:0.82rem;">${table ? 'Table ' + table.id : '?'}</td>
+        <td>${gameBadge(r.game)}</td>
+        <td style="text-align:center;">${r.players}</td>
+        <td style="font-style:italic;font-size:0.8rem;color:var(--text-muted);">${r.notes || '—'}</td>
+      </tr>`;
+    }).join('');
+
+  // Members table
+  const mtbody = document.getElementById('members-tbody');
+  mtbody.innerHTML = members.map(m => `
+    <tr>
+      <td class="strong">${m.firstName} ${m.lastName}</td>
+      <td style="color:var(--text-muted);font-size:0.82rem;">${m.email}</td>
+      <td style="font-size:0.82rem;">${m.joined || '—'}</td>
+      <td>${(m.games||[]).map(g => gameBadge(g)).join(' ')}</td>
+      <td style="text-align:center;">${m.newsletter ? '<span style="color:var(--green);">✓</span>' : '<span style="color:var(--text-muted);">—</span>'}</td>
+    </tr>`).join('');
+
+  // Tonight's tables
+  const tablesEl = document.getElementById('tables-tonight');
+  tablesEl.innerHTML = MockData.tables.map(t => {
+    const res = tonightRes.find(r => r.tableId === t.id);
+    const busy = !!res;
+    return `<div class="ti">
+      <div class="tic">${t.icon}</div>
+      <div class="ti-info">
+        <div class="ti-name">${t.name}</div>
+        <div class="ti-sub">${busy ? 'Booked ' + res.time + ' · ' + res.memberName : 'Open all evening'}</div>
+      </div>
+      <div class="dot ${busy?'dot-busy':'dot-free'}"></div>
+    </div>`;
+  }).join('');
+
+  // Newsletter sidebar
+  const nlMembers = members.filter(m => m.newsletter);
+  document.getElementById('nl-meta').textContent = nlCount + ' subscribers · last sent May 15';
+  const nlEl = document.getElementById('nl-members');
+  nlEl.innerHTML = nlMembers.slice(0,5).map(m => `
+    <div class="em">
+      <div><div class="em-n">${m.firstName} ${m.lastName}</div><div class="em-g">${(m.games||[]).join(', ')}</div></div>
+      <span class="em-ok">✓</span>
+    </div>`).join('');
+  if (nlMembers.length > 5) {
+    nlEl.innerHTML += `<div style="font-size:0.8rem;color:var(--text-muted);font-style:italic;margin-top:0.4rem;">+ ${nlMembers.length-5} more subscribers</div>`;
+  }
+
+  // Logout
+  document.getElementById('logout-btn').addEventListener('click', e => {
+    e.preventDefault();
+    Auth.clear();
+    window.location.href = 'index.html';
+  });
+});
+
+function todayStr() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function exportCSV() {
+  const upcoming = MockData.reservations.filter(r => r.date >= todayStr());
+  const rows = [['Date','Time','Member','Table','Game','Players','Notes']];
+  upcoming.forEach(r => {
+    const t = MockData.tables.find(x => x.id === r.tableId);
+    rows.push([r.date, r.time, r.memberName, t ? t.name : '', r.game, r.players, r.notes || '']);
+  });
+  const csv = rows.map(r => r.map(c => `"${c}"`).join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+  a.download = 'jffg-reservations.csv';
+  a.click();
+  showFlash('Reservations exported as CSV!');
+}
+
+function exportMembers() {
+  const members = MockData.members.filter(m => m.role !== 'admin');
+  const rows = [['First Name','Last Name','Email','Joined','Games','Newsletter']];
+  members.forEach(m => rows.push([m.firstName, m.lastName, m.email, m.joined||'', (m.games||[]).join(';'), m.newsletter?'Yes':'No']));
+  const csv = rows.map(r => r.map(c => `"${c}"`).join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+  a.download = 'jffg-members.csv';
+  a.click();
+  showFlash('Member list exported!');
+}
+
+function composeNewsletter() {
+  showFlash('Newsletter composer coming soon — Toby can export the list and use Mailchimp for now!');
+}
+</script>
+</body>
+</html>
