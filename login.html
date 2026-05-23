@@ -243,6 +243,11 @@
           <input class="form-input" type="password" id="signup-password" placeholder="8+ characters">
         </div>
         <div class="form-group">
+          <label class="form-label">Mobile Number <span style="color:var(--text-muted);font-size:0.8em;">(optional)</span></label>
+          <input class="form-input" type="tel" id="signup-mobile" placeholder="e.g. 203-555-1234">
+          <div class="form-hint">For reservation reminders — never shared.</div>
+        </div>
+        <div class="form-group">
           <label class="form-label">Games I play <span style="color:var(--text-muted); font-size:0.8em;">(pick all that apply)</span></label>
           <div class="games-grid">
             <label class="game-check"><input type="checkbox" name="game" value="40K"> Warhammer 40K</label>
@@ -258,7 +263,7 @@
           <input type="checkbox" id="newsletter-opt" checked>
           <label class="checkbox-label" for="newsletter-opt">Sign me up for the Just for Fun Gaming newsletter — events, new arrivals, and store news.</label>
         </div>
-        <button class="btn-submit" onclick="handleSignup()">Create My Account</button>
+        <button class="btn-submit" id="btn-signup" onclick="handleSignup()">Create My Account</button>
         <div class="divider-or"><span>or</span></div>
         <button class="btn-google" onclick="handleDemoLogin('member')">
           <span style="font-size:1.1rem;">🎲</span> Continue as Demo Member
@@ -279,14 +284,9 @@
           <input class="form-input" type="password" id="login-password" placeholder="Your password">
           <div class="form-hint"><a href="#" style="color:var(--gold); text-decoration:none;">Forgot your password?</a></div>
         </div>
-        <button class="btn-submit" style="margin-top:1rem;" onclick="handleLogin()">Log In</button>
+        <button class="btn-submit" style="margin-top:1rem;" id="btn-login" onclick="handleLogin()">Log In</button>
 
-        <div class="demo-logins">
-          <div class="demo-label">⚡ Demo Shortcuts</div>
-          <button class="demo-btn" onclick="handleDemoLogin('member')">🎲 Log in as a Member (Evan)</button>
-          <button class="demo-btn" onclick="handleDemoLogin('admin')">🔑 Log in as Admin (Toby)</button>
         </div>
-      </div>
       <div class="auth-footer-note">New here? <a href="#" onclick="switchTab('signup'); return false;">Create a free account</a></div>
     </div>
   </div>
@@ -298,12 +298,18 @@
   <div class="footer-copy">© 2026 Just for Fun Gaming LLC</div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/main.js"></script>
 <script>
-  // If already logged in, redirect
-  if (Auth.isLoggedIn()) {
-    window.location.href = Auth.isAdmin() ? 'admin.html' : 'reserve.html';
-  }
+  // Redirect if already logged in
+  document.addEventListener('DOMContentLoaded', async () => {
+    const sb = getSupabase();
+    const { data: { user } } = await sb.auth.getUser();
+    if (user) {
+      const profile = await getCurrentUser();
+      window.location.href = profile?.role === 'admin' ? 'admin.html' : 'reserve.html';
+    }
+  });
 
   function switchTab(tab) {
     document.getElementById('tab-signup').classList.toggle('active', tab === 'signup');
@@ -314,39 +320,61 @@
     document.getElementById('auth-sub').textContent = tab === 'signup' ? 'Create your free member account' : 'Log in to your member account';
   }
 
-  function handleSignup() {
-    const first = document.getElementById('signup-first').value.trim();
-    const last  = document.getElementById('signup-last').value.trim();
-    const email = document.getElementById('signup-email').value.trim();
-    if (!first || !email) { showFlash('Please fill in your name and email.', 'error'); return; }
-    const games = [...document.querySelectorAll('input[name="game"]:checked')].map(c => c.value);
+  async function handleSignup() {
+    const firstName  = document.getElementById('signup-first').value.trim();
+    const lastName   = document.getElementById('signup-last').value.trim();
+    const email      = document.getElementById('signup-email').value.trim();
+    const password   = document.getElementById('signup-password').value;
+    const mobile     = document.getElementById('signup-mobile').value.trim();
+    const games      = [...document.querySelectorAll('input[name="game"]:checked')].map(c => c.value);
     const newsletter = document.getElementById('newsletter-opt').checked;
-    const user = { id: 99, firstName: first, lastName: last, email, games, newsletter, role: 'member' };
-    Auth.set(user);
-    showFlash('Welcome, ' + first + '! Account created.');
-    setTimeout(() => window.location.href = 'reserve.html', 1200);
-  }
 
-  function handleLogin() {
-    const email = document.getElementById('login-email').value.trim();
-    // Find in mock data
-    const found = MockData.members.find(m => m.email === email);
-    if (found) {
-      Auth.set(found);
-      showFlash('Welcome back, ' + found.firstName + '!');
-      setTimeout(() => window.location.href = found.role === 'admin' ? 'admin.html' : 'reserve.html', 1000);
-    } else {
-      showFlash('Email not found. Try a demo shortcut below.', 'error');
+    if (!firstName || !email || !password) {
+      showFlash('Please fill in name, email and password.', 'error'); return;
+    }
+    if (password.length < 6) {
+      showFlash('Password must be at least 6 characters.', 'error'); return;
+    }
+
+    const btn = document.getElementById('btn-signup');
+    btn.textContent = 'Creating account...';
+    btn.disabled = true;
+
+    try {
+      await signUp({ firstName, lastName, email, password, mobile, games, newsletter });
+      showFlash('Account created! Check your email to confirm, then log in.');
+      setTimeout(() => switchTab('login'), 2000);
+    } catch (err) {
+      showFlash(err.message || 'Signup failed. Please try again.', 'error');
+      btn.textContent = 'Create My Account';
+      btn.disabled = false;
     }
   }
 
-  function handleDemoLogin(role) {
-    const user = role === 'admin'
-      ? MockData.members.find(m => m.role === 'admin')
-      : { id: 6, firstName: 'Evan', lastName: 'B.', email: 'evan@example.com', games: ['Board'], newsletter: true, role: 'member' };
-    Auth.set(user);
-    showFlash('Logged in as ' + user.firstName + (role === 'admin' ? ' (Admin)' : '') + '!');
-    setTimeout(() => window.location.href = role === 'admin' ? 'admin.html' : 'reserve.html', 1000);
+  async function handleLogin() {
+    const email    = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value;
+
+    if (!email || !password) {
+      showFlash('Please enter email and password.', 'error'); return;
+    }
+
+    const btn = document.getElementById('btn-login');
+    btn.textContent = 'Logging in...';
+    btn.disabled = true;
+
+    try {
+      await logIn({ email, password });
+      const profile = await getCurrentUser();
+      showFlash('Welcome back, ' + (profile?.first_name || '') + '!');
+      setTimeout(() => {
+        window.location.href = profile?.role === 'admin' ? 'admin.html' : 'reserve.html';
+      }, 800);
+    } catch (err) {
+      showFlash(err.message || 'Login failed. Check your email and password.', 'error');
+      btn.textContent = 'Log In';
+      btn.disabled = false;
+    }
   }
 </script>
 </body>

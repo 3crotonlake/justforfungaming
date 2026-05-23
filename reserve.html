@@ -278,8 +278,10 @@
   <div class="footer-copy">© 2026 Just for Fun Gaming LLC</div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/main.js"></script>
 <script>
+let _currentMember = null;
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const TIMES  = ['4:30 PM','5:00 PM','5:30 PM','6:00 PM','6:30 PM','7:00 PM','7:30 PM','8:00 PM','8:30 PM','9:00 PM'];
 const TAKEN_SLOTS = { '2026-05-22': ['5:00 PM','6:30 PM','7:00 PM'], '2026-05-23': ['3:00 PM','4:00 PM'] };
@@ -487,14 +489,13 @@ function confirmReservation(ds) {
   setTimeout(() => { renderCalendar(); renderMyReservations(); }, 1200);
 }
 
-function renderMyReservations() {
-  const user = Auth.get();
+async function renderMyReservations() {
   const container = document.getElementById('my-reservations-list');
-  if (!container || !user) return;
+  if (!container || !_currentMember) return;
 
-  const upcoming = MockData.getUserReservations(user.id)
-    .filter(r => r.date >= todayStr())
-    .sort((a, b) => a.date.localeCompare(b.date));
+  container.innerHTML = '<p style="color:var(--text-muted);font-style:italic;font-size:0.9rem;">Loading...</p>';
+
+  const upcoming = await getUserReservations(_currentMember.id);
 
   if (upcoming.length === 0) {
     container.innerHTML = '<p style="color:var(--text-muted); font-style:italic; font-size:0.9rem;">No upcoming reservations. Pick a date above to book a table!</p>';
@@ -505,7 +506,7 @@ function renderMyReservations() {
     const d = new Date(r.date + 'T12:00:00');
     const month = d.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
     const day = d.getDate();
-    const table = MockData.tables.find(t => t.id === r.tableId);
+    const table = MockData.tables.find(t => t.id === r.table_id);
     return `
       <div class="my-res-item">
         <div class="res-date-block">
@@ -513,21 +514,22 @@ function renderMyReservations() {
           <div class="res-day">${day}</div>
         </div>
         <div class="res-info">
-          <div class="res-title">${table ? table.name : 'Table'} · ${r.time}</div>
+          <div class="res-title">${table ? table.name : 'Table'} · ${r.start_time}</div>
           <div class="res-detail">${r.game}${r.players ? ' · ' + r.players + ' players' : ''}${r.notes ? ' · ' + r.notes : ''}</div>
         </div>
-        <a href="#" class="res-cancel" onclick="cancelRes(${r.id}); return false;">Cancel</a>
+        <a href="#" class="res-cancel" onclick="cancelRes('${r.id}'); return false;">Cancel</a>
       </div>`;
   }).join('');
 }
 
-function cancelRes(id) {
-  const idx = MockData.reservations.findIndex(r => r.id === id);
-  if (idx > -1) {
-    MockData.reservations.splice(idx, 1);
+async function cancelRes(id) {
+  try {
+    await cancelReservation(id);
     showFlash('Reservation cancelled.');
-    renderMyReservations();
+    await renderMyReservations();
     renderCalendar();
+  } catch(err) {
+    showFlash('Could not cancel: ' + err.message, 'error');
   }
 }
 

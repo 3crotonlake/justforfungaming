@@ -112,7 +112,7 @@
         </div>
         <table class="data-table">
           <thead>
-            <tr><th>Name</th><th>Email</th><th>Joined</th><th>Plays</th><th>Newsletter</th></tr>
+            <tr><th>Name</th><th>Email</th><th>Mobile</th><th>Plays</th><th>Newsletter</th></tr>
           </thead>
           <tbody id="members-tbody"></tbody>
         </table>
@@ -158,11 +158,15 @@
   <div class="footer-copy">© 2026 Just for Fun Gaming LLC</div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/main.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-  const user = Auth.get();
-  if (!user || user.role !== 'admin') {
+document.addEventListener('DOMContentLoaded', async () => {
+  const sb = getSupabase();
+  const { data: { user } } = await sb.auth.getUser();
+  const profile = user ? await getCurrentUser() : null;
+
+  if (!profile || profile.role !== 'admin') {
     document.getElementById('admin-ui').style.display = 'none';
     document.getElementById('access-denied').style.display = 'block';
     return;
@@ -175,72 +179,78 @@ document.addEventListener('DOMContentLoaded', () => {
     days[now.getDay()] + ', ' + now.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}) +
     ' · ' + (now.getDay() === 1 ? 'Closed today' : 'Open today 4:30–10 PM');
 
-  // Stats
-  const members = MockData.members.filter(m => m.role !== 'admin');
-  const nlCount = members.filter(m => m.newsletter).length;
-  const upcoming = MockData.reservations.filter(r => r.date >= todayStr());
-  const tonightStr = '2026-05-22';
-  const tonightRes = MockData.reservations.filter(r => r.date === tonightStr);
-  const takenTonight = [...new Set(tonightRes.map(r => r.tableId))];
+  // Load data from Supabase
+  const [members, reservations] = await Promise.all([
+    getAllMembers(),
+    getAllReservations()
+  ]);
+
+  const nonAdmins = members.filter(m => m.role !== 'admin');
+  const nlCount = nonAdmins.filter(m => m.newsletter).length;
+  const todayDate = todayStr();
+  const tonightRes = reservations.filter(r => r.date === todayDate);
+  const takenTonight = [...new Set(tonightRes.map(r => r.table_id))];
   const openTonight = MockData.tables.length - takenTonight.length;
 
-  document.getElementById('stat-members').textContent = members.length;
-  document.getElementById('stat-members-sub').textContent = 'joined this week: ' + members.filter(m => m.joined?.includes('May')).length;
+  document.getElementById('stat-members').textContent = nonAdmins.length;
+  document.getElementById('stat-members-sub').textContent = 'total members';
   document.getElementById('stat-newsletter').textContent = nlCount;
-  document.getElementById('stat-reservations').textContent = upcoming.length;
-  document.getElementById('stat-open').textContent = openTonight;
+  document.getElementById('stat-reservations').textContent = reservations.length;
+  document.getElementById('stat-open').textContent = Math.max(0, openTonight);
 
   // Reservations table
   const tbody = document.getElementById('res-tbody');
-  tbody.innerHTML = upcoming
-    .sort((a,b) => a.date.localeCompare(b.date) || a.time.localeCompare(b.time))
-    .map(r => {
+  tbody.innerHTML = reservations.length === 0
+    ? '<tr><td colspan="6" style="text-align:center;font-style:italic;color:var(--text-muted);">No upcoming reservations yet</td></tr>'
+    : reservations.map(r => {
       const d = new Date(r.date + 'T12:00:00');
-      const dateLabel = d.toLocaleDateString('en-US', {weekday:'short', month:'short', day:'numeric'}) + ' · ' + r.time;
-      const table = MockData.tables.find(t => t.id === r.tableId);
+      const dateLabel = d.toLocaleDateString('en-US', {weekday:'short', month:'short', day:'numeric'}) + ' · ' + r.start_time;
+      const table = MockData.tables.find(t => t.id === r.table_id);
       return `<tr>
         <td>${dateLabel}</td>
-        <td class="strong">${r.memberName}</td>
+        <td class="strong">${r.member_name || '—'}</td>
         <td style="font-size:0.82rem;">${table ? 'Table ' + table.id : '?'}</td>
-        <td>${gameBadge(r.game)}</td>
-        <td style="text-align:center;">${r.players}</td>
+        <td>${gameBadge(r.game || 'TBD')}</td>
+        <td style="text-align:center;">${r.players || '—'}</td>
         <td style="font-style:italic;font-size:0.8rem;color:var(--text-muted);">${r.notes || '—'}</td>
       </tr>`;
     }).join('');
 
   // Members table
   const mtbody = document.getElementById('members-tbody');
-  mtbody.innerHTML = members.map(m => `
-    <tr>
-      <td class="strong">${m.firstName} ${m.lastName}</td>
-      <td style="color:var(--text-muted);font-size:0.82rem;">${m.email}</td>
-      <td style="font-size:0.82rem;">${m.joined || '—'}</td>
-      <td>${(m.games||[]).map(g => gameBadge(g)).join(' ')}</td>
-      <td style="text-align:center;">${m.newsletter ? '<span style="color:var(--green);">✓</span>' : '<span style="color:var(--text-muted);">—</span>'}</td>
-    </tr>`).join('');
+  mtbody.innerHTML = nonAdmins.length === 0
+    ? '<tr><td colspan="5" style="text-align:center;font-style:italic;color:var(--text-muted);">No members yet — share the link!</td></tr>'
+    : nonAdmins.map(m => `
+      <tr>
+        <td class="strong">${m.first_name} ${m.last_name}</td>
+        <td style="color:var(--text-muted);font-size:0.82rem;">${m.email}</td>
+        <td style="font-size:0.82rem;">${m.mobile || '—'}</td>
+        <td>${(m.games||[]).map(g => gameBadge(g)).join(' ')}</td>
+        <td style="text-align:center;">${m.newsletter ? '<span style="color:var(--green);">✓</span>' : '<span style="color:var(--text-muted);">—</span>'}</td>
+      </tr>`).join('');
 
   // Tonight's tables
   const tablesEl = document.getElementById('tables-tonight');
   tablesEl.innerHTML = MockData.tables.map(t => {
-    const res = tonightRes.find(r => r.tableId === t.id);
+    const res = tonightRes.find(r => r.table_id === t.id);
     const busy = !!res;
     return `<div class="ti">
       <div class="tic">${t.icon}</div>
       <div class="ti-info">
         <div class="ti-name">${t.name}</div>
-        <div class="ti-sub">${busy ? 'Booked ' + res.time + ' · ' + res.memberName : 'Open all evening'}</div>
+        <div class="ti-sub">${busy ? 'Booked ' + res.start_time + ' · ' + res.member_name : 'Open all evening'}</div>
       </div>
       <div class="dot ${busy?'dot-busy':'dot-free'}"></div>
     </div>`;
   }).join('');
 
   // Newsletter sidebar
-  const nlMembers = members.filter(m => m.newsletter);
-  document.getElementById('nl-meta').textContent = nlCount + ' subscribers · last sent May 15';
+  const nlMembers = nonAdmins.filter(m => m.newsletter);
+  document.getElementById('nl-meta').textContent = nlCount + ' subscribers';
   const nlEl = document.getElementById('nl-members');
   nlEl.innerHTML = nlMembers.slice(0,5).map(m => `
     <div class="em">
-      <div><div class="em-n">${m.firstName} ${m.lastName}</div><div class="em-g">${(m.games||[]).join(', ')}</div></div>
+      <div><div class="em-n">${m.first_name} ${m.last_name}</div><div class="em-g">${(m.games||[]).join(', ')}</div></div>
       <span class="em-ok">✓</span>
     </div>`).join('');
   if (nlMembers.length > 5) {
@@ -248,9 +258,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Logout
-  document.getElementById('logout-btn').addEventListener('click', e => {
+  document.getElementById('logout-btn').addEventListener('click', async e => {
     e.preventDefault();
-    Auth.clear();
+    await getSupabase().auth.signOut();
     window.location.href = 'index.html';
   });
 });
@@ -260,25 +270,26 @@ function todayStr() {
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 }
 
-function exportCSV() {
-  const upcoming = MockData.reservations.filter(r => r.date >= todayStr());
+async function exportCSV() {
+  const reservations = await getAllReservations();
   const rows = [['Date','Time','Member','Table','Game','Players','Notes']];
-  upcoming.forEach(r => {
-    const t = MockData.tables.find(x => x.id === r.tableId);
-    rows.push([r.date, r.time, r.memberName, t ? t.name : '', r.game, r.players, r.notes || '']);
+  reservations.forEach(r => {
+    const t = MockData.tables.find(x => x.id === r.table_id);
+    rows.push([r.date, r.start_time, r.member_name, t ? t.name : '', r.game, r.players, r.notes || '']);
   });
   const csv = rows.map(r => r.map(c => `"${c}"`).join(',')).join('\n');
   const a = document.createElement('a');
   a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
   a.download = 'jffg-reservations.csv';
   a.click();
-  showFlash('Reservations exported as CSV!');
+  showFlash('Reservations exported!');
 }
 
-function exportMembers() {
-  const members = MockData.members.filter(m => m.role !== 'admin');
-  const rows = [['First Name','Last Name','Email','Joined','Games','Newsletter']];
-  members.forEach(m => rows.push([m.firstName, m.lastName, m.email, m.joined||'', (m.games||[]).join(';'), m.newsletter?'Yes':'No']));
+async function exportMembers() {
+  const members = await getAllMembers();
+  const nonAdmins = members.filter(m => m.role !== 'admin');
+  const rows = [['First Name','Last Name','Email','Mobile','Games','Newsletter']];
+  nonAdmins.forEach(m => rows.push([m.first_name, m.last_name, m.email, m.mobile||'', (m.games||[]).join(';'), m.newsletter?'Yes':'No']));
   const csv = rows.map(r => r.map(c => `"${c}"`).join(',')).join('\n');
   const a = document.createElement('a');
   a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
