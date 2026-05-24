@@ -3,44 +3,61 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Dashboard — Just for Fun Gaming</title>
+  <title>Admin — Just for Fun Gaming</title>
   <link rel="stylesheet" href="css/style.css">
   <style>
-    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; margin-bottom: 1.75rem; }
-    .stat-card { background: var(--dark-card); border: 1px solid var(--border); padding: 1rem 1.1rem; }
-    .stat-label { font-family: 'Barlow Condensed', sans-serif; font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.35rem; }
-    .stat-value { font-family: 'Cinzel', serif; font-size: 2rem; line-height: 1; }
-    .stat-sub { font-size: 0.78rem; color: var(--text-muted); font-style: italic; margin-top: 0.25rem; }
-    .admin-layout { display: grid; grid-template-columns: 1fr 290px; gap: 1.5rem; align-items: start; }
-    .sec-title {
-      font-family: 'Cinzel', serif; font-size: 1rem; color: var(--cream);
-      border-bottom: 1px solid var(--border); padding-bottom: 0.45rem;
-      margin-bottom: 0.85rem; display: flex; align-items: center; justify-content: space-between;
-    }
-    .sec-action { font-family: 'Barlow Condensed', sans-serif; font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); text-decoration: none; cursor: pointer; }
-    .sk { background: var(--dark-card); border: 1px solid var(--border); margin-bottom: 0.85rem; }
-    .sk-head { background: var(--dark-surface); border-bottom: 1px solid var(--border); padding: 0.8rem 1rem; font-family: 'Cinzel', serif; font-size: 0.9rem; color: var(--cream); }
-    .sk-body { padding: 1rem; }
-    .ti { display: flex; align-items: center; gap: 0.6rem; padding: 0.45rem 0; border-bottom: 1px solid rgba(201,168,76,0.07); }
-    .ti:last-child { border-bottom: none; }
-    .tic { font-size: 1.1rem; width: 24px; text-align: center; flex-shrink: 0; }
-    .ti-info { flex: 1; min-width: 0; }
-    .ti-name { font-family: 'Barlow Condensed', sans-serif; font-size: 0.75rem; letter-spacing: 0.04em; color: var(--cream); }
-    .ti-sub { font-size: 0.75rem; color: var(--text-muted); font-style: italic; }
-    .em { display: flex; align-items: center; justify-content: space-between; padding: 0.4rem 0; border-bottom: 1px solid rgba(201,168,76,0.07); }
-    .em:last-child { border-bottom: none; }
-    .em-n { font-size: 0.87rem; color: var(--cream); }
-    .em-g { font-family: 'Barlow Condensed', sans-serif; font-size: 0.6rem; letter-spacing: 0.08em; color: var(--text-muted); }
-    .em-ok { color: var(--green); font-size: 0.8rem; }
-    .btn-exp { display: block; width: 100%; font-family: 'Barlow Condensed', sans-serif; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 700; background: transparent; color: var(--gold); border: 1px solid var(--border); padding: 0.6rem; cursor: pointer; margin-top: 0.65rem; text-align: center; }
-    .btn-exp:hover { background: rgba(201,168,76,0.07); }
-    .btn-cmp { display: block; width: 100%; font-family: 'Barlow Condensed', sans-serif; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 700; background: var(--gold); color: var(--dark); border: none; padding: 0.6rem; cursor: pointer; margin-top: 0.35rem; }
-    .btn-cmp:hover { background: var(--gold-light); }
-    .admin-badge { font-family: 'Barlow Condensed', sans-serif; font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; background: var(--red); color: var(--cream); padding: 0.18rem 0.5rem; margin-left: 0.5rem; vertical-align: middle; }
-    @media (max-width: 700px) {
-      .stats-row { grid-template-columns: 1fr 1fr; }
-      .admin-layout { grid-template-columns: 1fr; }
-    }
+    .stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:0.75rem; margin-bottom:1.75rem; }
+    .stat-card { background:var(--dark-card); border:1px solid var(--border); padding:1rem 1.1rem; }
+    .stat-label { font-family:'Barlow Condensed',sans-serif; font-size:0.6rem; letter-spacing:.18em; text-transform:uppercase; color:var(--text-muted); margin-bottom:.35rem; }
+    .stat-value { font-family:'Cinzel',serif; font-size:2rem; line-height:1; }
+    .stat-sub { font-size:.78rem; color:var(--text-muted); font-style:italic; margin-top:.25rem; }
+    .admin-layout { display:grid; grid-template-columns:1fr 290px; gap:1.5rem; align-items:start; }
+    .sec-title { font-family:'Cinzel',serif; font-size:1rem; color:var(--cream); border-bottom:1px solid var(--border); padding-bottom:.45rem; margin-bottom:.85rem; display:flex; align-items:center; justify-content:space-between; }
+    .sec-action { font-family:'Barlow Condensed',sans-serif; font-size:.65rem; letter-spacing:.12em; text-transform:uppercase; color:var(--gold); text-decoration:none; cursor:pointer; background:none; border:none; }
+    .sk { background:var(--dark-card); border:1px solid var(--border); margin-bottom:.85rem; }
+    .sk-head { background:var(--dark-surface); border-bottom:1px solid var(--border); padding:.8rem 1rem; font-family:'Cinzel',serif; font-size:.9rem; color:var(--cream); }
+    .sk-body { padding:1rem; }
+    .ti { display:flex; align-items:center; gap:.6rem; padding:.45rem 0; border-bottom:1px solid rgba(201,168,76,.07); }
+    .ti:last-child { border-bottom:none; }
+    .tic { font-size:1.1rem; width:24px; text-align:center; flex-shrink:0; }
+    .ti-info { flex:1; }
+    .ti-name { font-family:'Barlow Condensed',sans-serif; font-size:.75rem; color:var(--cream); }
+    .ti-sub { font-size:.75rem; color:var(--text-muted); font-style:italic; }
+    .admin-badge { font-family:'Barlow Condensed',sans-serif; font-size:.6rem; letter-spacing:.2em; text-transform:uppercase; background:var(--red); color:var(--cream); padding:.18rem .5rem; margin-left:.5rem; vertical-align:middle; }
+    /* Member cards */
+    .member-card { background:var(--dark-card); border:1px solid var(--border); padding:1rem 1.25rem; margin-bottom:.5rem; display:flex; align-items:center; gap:1rem; }
+    .member-avatar { width:36px; height:36px; border-radius:50%; background:var(--blue-deep); display:flex; align-items:center; justify-content:center; font-family:'Cinzel',serif; font-size:.9rem; color:var(--gold); flex-shrink:0; }
+    .member-info { flex:1; }
+    .member-name { font-family:'Barlow Condensed',sans-serif; font-size:.9rem; letter-spacing:.05em; color:var(--cream); }
+    .member-email { font-size:.82rem; color:var(--text-muted); }
+    .member-meta { font-size:.78rem; color:var(--text-muted); font-style:italic; margin-top:.15rem; }
+    .member-actions { display:flex; gap:.5rem; flex-shrink:0; }
+    .role-badge { font-family:'Barlow Condensed',sans-serif; font-size:.62rem; letter-spacing:.12em; text-transform:uppercase; padding:.2rem .6rem; border-radius:2px; }
+    .role-admin { background:rgba(139,32,32,.3); color:#E87070; border:1px solid rgba(139,32,32,.4); }
+    .role-member { background:rgba(74,144,217,.15); color:#7BB8F0; border:1px solid rgba(74,144,217,.25); }
+    .btn-sm { font-family:'Barlow Condensed',sans-serif; font-size:.65rem; letter-spacing:.12em; text-transform:uppercase; padding:.3rem .7rem; cursor:pointer; border:1px solid; transition:all .15s; background:transparent; }
+    .btn-make-admin { color:var(--gold); border-color:var(--border); }
+    .btn-make-admin:hover { background:rgba(201,168,76,.1); }
+    .btn-make-member { color:var(--blue-accent); border-color:rgba(74,144,217,.3); }
+    .btn-make-member:hover { background:rgba(74,144,217,.1); }
+    .btn-remove { color:#E87070; border-color:rgba(139,32,32,.3); }
+    .btn-remove:hover { background:rgba(139,32,32,.15); }
+    .tab-bar { display:flex; gap:0; margin-bottom:1.25rem; border-bottom:1px solid var(--border); }
+    .tab-pill { font-family:'Barlow Condensed',sans-serif; font-size:.75rem; letter-spacing:.15em; text-transform:uppercase; padding:.65rem 1.25rem; cursor:pointer; background:none; border:none; color:var(--text-muted); border-bottom:2px solid transparent; margin-bottom:-1px; transition:all .2s; }
+    .tab-pill.active { color:var(--gold); border-bottom-color:var(--gold); }
+    .tab-content { display:none; }
+    .tab-content.active { display:block; }
+    .search-bar { display:flex; gap:.5rem; margin-bottom:1rem; }
+    .search-input { flex:1; background:rgba(255,255,255,.04); border:1px solid var(--border-input); color:var(--cream); font-family:'Crimson Pro',serif; font-size:.95rem; padding:.5rem .75rem; outline:none; }
+    .search-input:focus { border-color:rgba(201,168,76,.5); }
+    .search-input::placeholder { color:var(--text-muted); font-style:italic; }
+    .nl-dot { color:var(--green); }
+    .btn-exp { display:block; width:100%; font-family:'Barlow Condensed',sans-serif; font-size:.75rem; letter-spacing:.15em; text-transform:uppercase; font-weight:700; background:transparent; color:var(--gold); border:1px solid var(--border); padding:.6rem; cursor:pointer; margin-top:.65rem; text-align:center; }
+    .btn-exp:hover { background:rgba(201,168,76,.07); }
+    .btn-cmp { display:block; width:100%; font-family:'Barlow Condensed',sans-serif; font-size:.75rem; letter-spacing:.15em; text-transform:uppercase; font-weight:700; background:var(--gold); color:var(--dark); border:none; padding:.6rem; cursor:pointer; margin-top:.35rem; }
+    .btn-cmp:hover { background:var(--gold-light); }
+    .empty-state { text-align:center; padding:2rem; color:var(--text-muted); font-style:italic; font-size:.95rem; }
+    @media (max-width:700px) { .stats-row { grid-template-columns:1fr 1fr; } .admin-layout { grid-template-columns:1fr; } .member-actions { flex-direction:column; } }
   </style>
 </head>
 <body>
@@ -64,88 +81,79 @@
   <a href="blog.html">Blog</a>
 </div>
 
-<div id="access-denied" style="display:none; text-align:center; padding:4rem 2rem;">
-  <p style="font-size:1.1rem; color:var(--cream-dim); font-style:italic; margin-bottom:1.25rem;">Admin access only. Please log in as Toby.</p>
+<div id="access-denied" style="display:none;text-align:center;padding:4rem 2rem;">
+  <p style="font-size:1.1rem;color:var(--cream-dim);font-style:italic;margin-bottom:1.25rem;">Admin access only.</p>
   <a href="login.html" class="btn-primary">Log In</a>
 </div>
 
-<div class="page-wrap" id="admin-ui">
+<div class="page-wrap" id="admin-ui" style="display:none;">
   <p class="page-eyebrow">Store Management</p>
-  <div class="page-title" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;">
+  <div class="page-title" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;">
     Dashboard
-    <span style="font-family:'Barlow Condensed',sans-serif; font-size:0.72rem; letter-spacing:0.08em; color:var(--text-muted);" id="today-label"></span>
+    <span style="font-family:'Barlow Condensed',sans-serif;font-size:.72rem;letter-spacing:.08em;color:var(--text-muted);" id="today-label"></span>
   </div>
 
   <!-- STATS -->
   <div class="stats-row">
-    <div class="stat-card"><div class="stat-label">Members</div><div class="stat-value" style="color:var(--gold)" id="stat-members">—</div><div class="stat-sub" id="stat-members-sub"></div></div>
-    <div class="stat-card"><div class="stat-label">Newsletter subscribers</div><div class="stat-value" style="color:var(--blue-accent)" id="stat-newsletter">—</div><div class="stat-sub">opt-in members</div></div>
-    <div class="stat-card"><div class="stat-label">Total reservations</div><div class="stat-value" style="color:var(--green)" id="stat-reservations">—</div><div class="stat-sub">upcoming bookings</div></div>
-    <div class="stat-card"><div class="stat-label">Tables open tonight</div><div class="stat-value" style="color:var(--amber)" id="stat-open">—</div><div class="stat-sub">of 5 available</div></div>
+    <div class="stat-card"><div class="stat-label">Total Members</div><div class="stat-value" style="color:var(--gold)" id="stat-members">—</div><div class="stat-sub" id="stat-members-sub">loading...</div></div>
+    <div class="stat-card"><div class="stat-label">Newsletter</div><div class="stat-value" style="color:var(--blue-accent)" id="stat-newsletter">—</div><div class="stat-sub">subscribers</div></div>
+    <div class="stat-card"><div class="stat-label">Upcoming Bookings</div><div class="stat-value" style="color:var(--green)" id="stat-reservations">—</div><div class="stat-sub">confirmed</div></div>
+    <div class="stat-card"><div class="stat-label">Tables Open Tonight</div><div class="stat-value" style="color:var(--amber)" id="stat-open">—</div><div class="stat-sub">of 5 available</div></div>
   </div>
 
   <div class="admin-layout">
-    <!-- MAIN CONTENT -->
     <div>
-      <div class="sec-title">
-        Upcoming Reservations
-        <a class="sec-action" onclick="exportCSV()">Export CSV →</a>
+      <!-- TABS -->
+      <div class="tab-bar">
+        <button class="tab-pill active" onclick="switchTab('members')">Members</button>
+        <button class="tab-pill" onclick="switchTab('reservations')">Reservations</button>
       </div>
-      <table class="data-table" id="res-table">
-        <thead>
-          <tr>
-            <th>Date &amp; Time</th>
-            <th>Member</th>
-            <th>Table</th>
-            <th>Game</th>
-            <th>Players</th>
-            <th>Notes</th>
-          </tr>
-        </thead>
-        <tbody id="res-tbody"></tbody>
-      </table>
 
-      <div style="margin-top:1.75rem;">
-        <div class="sec-title">
-          Member Directory
-          <a class="sec-action" onclick="exportMembers()">Export →</a>
+      <!-- MEMBERS TAB -->
+      <div class="tab-content active" id="tab-members">
+        <div class="search-bar">
+          <input class="search-input" type="text" id="member-search" placeholder="Search by name or email..." oninput="filterMembers()">
+          <button class="sec-action" style="border:1px solid var(--border);padding:.5rem .85rem;" onclick="exportMembers()">Export CSV</button>
         </div>
-        <table class="data-table">
-          <thead>
-            <tr><th>Name</th><th>Email</th><th>Mobile</th><th>Plays</th><th>Newsletter</th></tr>
-          </thead>
-          <tbody id="members-tbody"></tbody>
+        <div id="members-list"><div class="empty-state">Loading members...</div></div>
+      </div>
+
+      <!-- RESERVATIONS TAB -->
+      <div class="tab-content" id="tab-reservations">
+        <div class="sec-title">Upcoming Reservations <button class="sec-action" onclick="exportReservations()">Export CSV</button></div>
+        <table class="data-table" id="res-table">
+          <thead><tr><th>Date & Time</th><th>Member</th><th>Table</th><th>Game</th><th>Players</th><th>Notes</th></tr></thead>
+          <tbody id="res-tbody"><tr><td colspan="6" class="empty-state">Loading...</td></tr></tbody>
         </table>
       </div>
     </div>
 
     <!-- SIDEBAR -->
     <div>
-      <!-- TONIGHT'S TABLES -->
+      <!-- TONIGHT -->
       <div class="sk">
         <div class="sk-head">Tonight's Tables</div>
-        <div class="sk-body" id="tables-tonight"></div>
+        <div class="sk-body" id="tables-tonight"><div style="color:var(--text-muted);font-style:italic;font-size:.85rem;">Loading...</div></div>
       </div>
 
       <!-- NEWSLETTER -->
       <div class="sk">
         <div class="sk-head">Newsletter</div>
         <div class="sk-body">
-          <div style="font-family:'Barlow Condensed',sans-serif; font-size:0.62rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.5rem;" id="nl-meta"></div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.5rem;" id="nl-meta">Loading...</div>
           <div id="nl-members"></div>
-          <button class="btn-exp" onclick="exportCSV()">Export Email List (CSV)</button>
-          <button class="btn-cmp" onclick="composeNewsletter()">Compose Newsletter →</button>
+          <button class="btn-exp" onclick="exportNewsletter()">Export Email List (CSV)</button>
+          <button class="btn-cmp" onclick="showFlash('Newsletter composer coming soon!')">Compose Newsletter →</button>
         </div>
       </div>
 
       <!-- QUICK LINKS -->
       <div class="sk">
         <div class="sk-head">Quick Actions</div>
-        <div class="sk-body" style="display:flex;flex-direction:column;gap:0.4rem;">
+        <div class="sk-body" style="display:flex;flex-direction:column;gap:.4rem;">
           <a href="index.html" class="btn-gold-outline">View Public Site</a>
-          <a href="reserve.html" class="btn-gold-outline">View Reservation Calendar</a>
-          <a href="blog.html" class="btn-gold-outline">Manage Blog</a>
-          <a href="login.html" class="btn-gold-outline" id="logout-btn">Log Out</a>
+          <a href="reserve.html" class="btn-gold-outline">Reservation Calendar</a>
+          <a href="blog.html" class="btn-gold-outline">Blog</a>
         </div>
       </div>
     </div>
@@ -161,145 +169,205 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/main.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', async () => {
-  const sb = getSupabase();
-  const { data: { user } } = await sb.auth.getUser();
-  const profile = user ? await getCurrentUser() : null;
+let _allMembers = [];
+let _allReservations = [];
 
+document.addEventListener('DOMContentLoaded', async () => {
+  const profile = await getCurrentUser();
   if (!profile || profile.role !== 'admin') {
     document.getElementById('admin-ui').style.display = 'none';
     document.getElementById('access-denied').style.display = 'block';
     return;
   }
+  document.getElementById('admin-ui').style.display = 'block';
 
   // Today label
   const now = new Date();
   const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
   document.getElementById('today-label').textContent =
     days[now.getDay()] + ', ' + now.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}) +
-    ' · ' + (now.getDay() === 1 ? 'Closed today' : 'Open today 4:30–10 PM');
+    (now.getDay() === 1 ? ' · Closed today' : ' · Open today 4:30–10 PM');
 
-  // Load data from Supabase
-  const [members, reservations] = await Promise.all([
-    getAllMembers(),
-    getAllReservations()
-  ]);
+  await loadData();
+});
+
+async function loadData() {
+  const [members, reservations] = await Promise.all([getAllMembers(), getAllReservations()]);
+  _allMembers = members;
+  _allReservations = reservations;
 
   const nonAdmins = members.filter(m => m.role !== 'admin');
   const nlCount = nonAdmins.filter(m => m.newsletter).length;
   const todayDate = todayStr();
   const tonightRes = reservations.filter(r => r.date === todayDate);
   const takenTonight = [...new Set(tonightRes.map(r => r.table_id))];
-  const openTonight = MockData.tables.length - takenTonight.length;
 
+  // Stats
   document.getElementById('stat-members').textContent = nonAdmins.length;
-  document.getElementById('stat-members-sub').textContent = 'total members';
+  document.getElementById('stat-members-sub').textContent = members.filter(m => m.role === 'admin').length + ' admin(s)';
   document.getElementById('stat-newsletter').textContent = nlCount;
   document.getElementById('stat-reservations').textContent = reservations.length;
-  document.getElementById('stat-open').textContent = Math.max(0, openTonight);
+  document.getElementById('stat-open').textContent = Math.max(0, 5 - takenTonight.length);
 
-  // Reservations table
+  renderMembers(members);
+  renderReservations(reservations);
+  renderTonightTables(tonightRes);
+  renderNewsletter(members);
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab-pill').forEach((p,i) => p.classList.toggle('active', (i===0&&tab==='members')||(i===1&&tab==='reservations')));
+  document.getElementById('tab-members').classList.toggle('active', tab === 'members');
+  document.getElementById('tab-reservations').classList.toggle('active', tab === 'reservations');
+}
+
+function filterMembers() {
+  const q = document.getElementById('member-search').value.toLowerCase();
+  const filtered = _allMembers.filter(m =>
+    (m.first_name + ' ' + m.last_name + ' ' + m.email).toLowerCase().includes(q)
+  );
+  renderMembers(filtered);
+}
+
+function renderMembers(members) {
+  const container = document.getElementById('members-list');
+  if (!members.length) {
+    container.innerHTML = '<div class="empty-state">No members yet.</div>';
+    return;
+  }
+  container.innerHTML = members.map(m => {
+    const initials = (m.first_name[0] || '') + (m.last_name[0] || '');
+    const isAdmin = m.role === 'admin';
+    return `
+      <div class="member-card" id="mc-${m.id}">
+        <div class="member-avatar">${initials.toUpperCase()}</div>
+        <div class="member-info">
+          <div class="member-name">
+            ${m.first_name} ${m.last_name}
+            <span class="role-badge ${isAdmin ? 'role-admin' : 'role-member'}">${m.role}</span>
+            ${m.newsletter ? '<span class="nl-dot" title="Newsletter subscriber">✉</span>' : ''}
+          </div>
+          <div class="member-email">${m.email}${m.mobile ? ' · ' + m.mobile : ''}</div>
+          <div class="member-meta">
+            ${(m.games||[]).join(', ') || 'No games selected'}
+            · Joined ${new Date(m.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}
+          </div>
+        </div>
+        <div class="member-actions">
+          ${isAdmin
+            ? `<button class="btn-sm btn-make-member" onclick="changeRole('${m.id}','member')">Make Member</button>`
+            : `<button class="btn-sm btn-make-admin" onclick="changeRole('${m.id}','admin')">Make Admin</button>`
+          }
+          <button class="btn-sm btn-remove" onclick="removeMember('${m.id}','${m.first_name}')">Remove</button>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+async function changeRole(id, role) {
+  try {
+    await updateMemberRole(id, role);
+    showFlash('Role updated to ' + role + '.');
+    await loadData();
+  } catch(e) { showFlash('Error: ' + e.message, 'error'); }
+}
+
+async function removeMember(id, name) {
+  if (!confirm('Remove ' + name + ' from the system? This cannot be undone.')) return;
+  try {
+    await deleteMember(id);
+    showFlash(name + ' removed.');
+    await loadData();
+  } catch(e) { showFlash('Error: ' + e.message, 'error'); }
+}
+
+function renderReservations(reservations) {
   const tbody = document.getElementById('res-tbody');
-  tbody.innerHTML = reservations.length === 0
-    ? '<tr><td colspan="6" style="text-align:center;font-style:italic;color:var(--text-muted);">No upcoming reservations yet</td></tr>'
-    : reservations.map(r => {
-      const d = new Date(r.date + 'T12:00:00');
-      const dateLabel = d.toLocaleDateString('en-US', {weekday:'short', month:'short', day:'numeric'}) + ' · ' + r.start_time;
-      const table = MockData.tables.find(t => t.id === r.table_id);
-      return `<tr>
-        <td>${dateLabel}</td>
-        <td class="strong">${r.member_name || '—'}</td>
-        <td style="font-size:0.82rem;">${table ? 'Table ' + table.id : '?'}</td>
-        <td>${gameBadge(r.game || 'TBD')}</td>
-        <td style="text-align:center;">${r.players || '—'}</td>
-        <td style="font-style:italic;font-size:0.8rem;color:var(--text-muted);">${r.notes || '—'}</td>
-      </tr>`;
-    }).join('');
+  if (!reservations.length) {
+    tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No upcoming reservations yet.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = reservations.map(r => {
+    const d = new Date(r.date + 'T12:00:00');
+    const dateLabel = d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'}) + ' · ' + r.start_time;
+    const table = MockData.tables.find(t => t.id === r.table_id);
+    return `<tr>
+      <td>${dateLabel}</td>
+      <td class="strong">${r.member_name || '—'}</td>
+      <td style="font-size:.82rem;">${table ? 'Table ' + table.id : '?'}</td>
+      <td>${gameBadge(r.game || 'TBD')}</td>
+      <td style="text-align:center;">${r.players || '—'}</td>
+      <td style="font-style:italic;font-size:.8rem;color:var(--text-muted);">${r.notes || '—'}</td>
+    </tr>`;
+  }).join('');
+}
 
-  // Members table
-  const mtbody = document.getElementById('members-tbody');
-  mtbody.innerHTML = nonAdmins.length === 0
-    ? '<tr><td colspan="5" style="text-align:center;font-style:italic;color:var(--text-muted);">No members yet — share the link!</td></tr>'
-    : nonAdmins.map(m => `
-      <tr>
-        <td class="strong">${m.first_name} ${m.last_name}</td>
-        <td style="color:var(--text-muted);font-size:0.82rem;">${m.email}</td>
-        <td style="font-size:0.82rem;">${m.mobile || '—'}</td>
-        <td>${(m.games||[]).map(g => gameBadge(g)).join(' ')}</td>
-        <td style="text-align:center;">${m.newsletter ? '<span style="color:var(--green);">✓</span>' : '<span style="color:var(--text-muted);">—</span>'}</td>
-      </tr>`).join('');
-
-  // Tonight's tables
-  const tablesEl = document.getElementById('tables-tonight');
-  tablesEl.innerHTML = MockData.tables.map(t => {
+function renderTonightTables(tonightRes) {
+  const el = document.getElementById('tables-tonight');
+  el.innerHTML = MockData.tables.map(t => {
     const res = tonightRes.find(r => r.table_id === t.id);
-    const busy = !!res;
     return `<div class="ti">
       <div class="tic">${t.icon}</div>
       <div class="ti-info">
         <div class="ti-name">${t.name}</div>
-        <div class="ti-sub">${busy ? 'Booked ' + res.start_time + ' · ' + res.member_name : 'Open all evening'}</div>
+        <div class="ti-sub">${res ? 'Booked ' + res.start_time + ' · ' + res.member_name : 'Open all evening'}</div>
       </div>
-      <div class="dot ${busy?'dot-busy':'dot-free'}"></div>
+      <div class="dot ${res ? 'dot-busy' : 'dot-free'}"></div>
     </div>`;
   }).join('');
-
-  // Newsletter sidebar
-  const nlMembers = nonAdmins.filter(m => m.newsletter);
-  document.getElementById('nl-meta').textContent = nlCount + ' subscribers';
-  const nlEl = document.getElementById('nl-members');
-  nlEl.innerHTML = nlMembers.slice(0,5).map(m => `
-    <div class="em">
-      <div><div class="em-n">${m.first_name} ${m.last_name}</div><div class="em-g">${(m.games||[]).join(', ')}</div></div>
-      <span class="em-ok">✓</span>
-    </div>`).join('');
-  if (nlMembers.length > 5) {
-    nlEl.innerHTML += `<div style="font-size:0.8rem;color:var(--text-muted);font-style:italic;margin-top:0.4rem;">+ ${nlMembers.length-5} more subscribers</div>`;
-  }
-
-  // Logout
-  document.getElementById('logout-btn').addEventListener('click', async e => {
-    e.preventDefault();
-    await getSupabase().auth.signOut();
-    window.location.href = 'index.html';
-  });
-});
-
-function todayStr() {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 }
 
-async function exportCSV() {
-  const reservations = await getAllReservations();
-  const rows = [['Date','Time','Member','Table','Game','Players','Notes']];
-  reservations.forEach(r => {
-    const t = MockData.tables.find(x => x.id === r.table_id);
-    rows.push([r.date, r.start_time, r.member_name, t ? t.name : '', r.game, r.players, r.notes || '']);
-  });
-  const csv = rows.map(r => r.map(c => `"${c}"`).join(',')).join('\n');
-  const a = document.createElement('a');
-  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
-  a.download = 'jffg-reservations.csv';
-  a.click();
-  showFlash('Reservations exported!');
+function renderNewsletter(members) {
+  const subs = members.filter(m => m.newsletter && m.role !== 'admin');
+  document.getElementById('nl-meta').textContent = subs.length + ' subscribers';
+  const el = document.getElementById('nl-members');
+  el.innerHTML = subs.slice(0,5).map(m => `
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:.4rem 0;border-bottom:1px solid rgba(201,168,76,.07);">
+      <div>
+        <div style="font-size:.87rem;color:var(--cream);">${m.first_name} ${m.last_name}</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:.6rem;letter-spacing:.08em;color:var(--text-muted);">${(m.games||[]).join(', ')}</div>
+      </div>
+      <span style="color:var(--green);font-size:.8rem;">✓</span>
+    </div>`).join('');
+  if (subs.length > 5) el.innerHTML += `<div style="font-size:.8rem;color:var(--text-muted);font-style:italic;margin-top:.4rem;">+ ${subs.length-5} more</div>`;
 }
 
 async function exportMembers() {
-  const members = await getAllMembers();
-  const nonAdmins = members.filter(m => m.role !== 'admin');
-  const rows = [['First Name','Last Name','Email','Mobile','Games','Newsletter']];
-  nonAdmins.forEach(m => rows.push([m.first_name, m.last_name, m.email, m.mobile||'', (m.games||[]).join(';'), m.newsletter?'Yes':'No']));
-  const csv = rows.map(r => r.map(c => `"${c}"`).join(',')).join('\n');
-  const a = document.createElement('a');
-  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
-  a.download = 'jffg-members.csv';
-  a.click();
+  const rows = [['First Name','Last Name','Email','Mobile','Role','Games','Newsletter','Joined']];
+  _allMembers.forEach(m => rows.push([
+    m.first_name, m.last_name, m.email, m.mobile||'',
+    m.role, (m.games||[]).join(';'),
+    m.newsletter?'Yes':'No',
+    new Date(m.created_at).toLocaleDateString()
+  ]));
+  downloadCSV(rows, 'jffg-members.csv');
   showFlash('Member list exported!');
 }
 
-function composeNewsletter() {
-  showFlash('Newsletter composer coming soon — Toby can export the list and use Mailchimp for now!');
+async function exportReservations() {
+  const rows = [['Date','Time','Member','Table','Game','Players','Notes']];
+  _allReservations.forEach(r => {
+    const t = MockData.tables.find(x => x.id === r.table_id);
+    rows.push([r.date, r.start_time, r.member_name, t?t.name:'', r.game, r.players, r.notes||'']);
+  });
+  downloadCSV(rows, 'jffg-reservations.csv');
+  showFlash('Reservations exported!');
+}
+
+async function exportNewsletter() {
+  const subs = _allMembers.filter(m => m.newsletter && m.role !== 'admin');
+  const rows = [['First Name','Last Name','Email','Mobile','Games']];
+  subs.forEach(m => rows.push([m.first_name, m.last_name, m.email, m.mobile||'', (m.games||[]).join(';')]));
+  downloadCSV(rows, 'jffg-newsletter.csv');
+  showFlash('Newsletter list exported!');
+}
+
+function downloadCSV(rows, filename) {
+  const csv = rows.map(r => r.map(c => '"' + String(c).replace(/"/g,'""') + '"').join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+  a.download = filename;
+  a.click();
 }
 </script>
 </body>
