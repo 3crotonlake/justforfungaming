@@ -219,7 +219,7 @@
     <a href="login.html" class="btn-primary">Join or Log In</a>
   </div>
 
-  <div id="reserve-ui">
+  <div id="reserve-ui" style="display:none;">
     <div class="reserve-layout">
       <!-- CALENDAR -->
       <div>
@@ -545,12 +545,19 @@ function changeMonth(dir) {
 }
 
 // INIT
-document.addEventListener('DOMContentLoaded', () => {
-  const user = Auth.get();
-  if (!user) {
+document.addEventListener('DOMContentLoaded', async () => {
+  // Hide both while loading
+  document.getElementById('login-prompt').style.display = 'none';
+  document.getElementById('reserve-ui').style.display = 'none';
+
+  _currentMember = await getProfile();
+
+  if (!_currentMember) {
     document.getElementById('login-prompt').style.display = 'block';
-    document.getElementById('reserve-ui').style.display = 'none';
   } else {
+    document.getElementById('reserve-ui').style.display = 'block';
+    curYear = new Date().getFullYear();
+    curMonth = new Date().getMonth();
     renderCalendar();
     renderMyReservations();
   }
