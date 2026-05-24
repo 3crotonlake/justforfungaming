@@ -279,14 +279,14 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="js/main.js?v=4"></script>
+<script src="js/main.js?v=7"></script>
 <script>
 let _currentMember = null;
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const TIMES  = ['4:30 PM','5:00 PM','5:30 PM','6:00 PM','6:30 PM','7:00 PM','7:30 PM','8:00 PM','8:30 PM','9:00 PM'];
 const TAKEN_SLOTS = { '2026-05-22': ['5:00 PM','6:30 PM','7:00 PM'], '2026-05-23': ['3:00 PM','4:00 PM'] };
 
-let curYear = 2026, curMonth = 4, selDay = null, selTime = null, selTable = null;
+let curYear = new Date().getFullYear(), curMonth = new Date().getMonth(), selDay = null, selTime = null, selTable = null;
 
 function todayStr() {
   const d = new Date();

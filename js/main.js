@@ -1,14 +1,15 @@
-/* ============================================
-   Just for Fun Gaming — main.js
-   ============================================ */
+/* Just for Fun Gaming — main.js */
 
 const SUPABASE_URL = 'https://ghdnxwhtoweblkzrljpp.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_TqISQhtWWcIlgyZIj3M-MA_Fv22X3jx';
 
+// Initialize Supabase immediately — not lazily
 let _sb = null;
 function sb() {
-  if (!_sb && window.supabase) {
-    _sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  if (!_sb) {
+    if (window.supabase) {
+      _sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    }
   }
   return _sb;
 }
@@ -22,27 +23,35 @@ async function getProfile() {
     if (!client) return null;
     const { data: { session } } = await client.auth.getSession();
     if (!session) return null;
-    const { data } = await client.from('members').select('*').eq('auth_id', session.user.id).single();
+    const { data } = await client.from('members')
+      .select('*')
+      .eq('auth_id', session.user.id)
+      .single();
     _profile = data || null;
     return _profile;
-  } catch(e) { return null; }
+  } catch(e) {
+    return null;
+  }
 }
 
 // ---- NAV ----
+// Called on DOMContentLoaded — hides nav-right until session resolves
 async function updateNav() {
   const navRight = document.getElementById('nav-right');
   if (!navRight) return;
+
+  // Show placeholder while loading
+  navRight.style.opacity = '0';
 
   const profile = await getProfile();
 
   if (profile) {
     navRight.innerHTML =
-      '<span class="nav-user-name">' +
-        profile.first_name +
-        (profile.role === 'admin'
-          ? '&nbsp;&nbsp;<a href="admin.html">Admin</a>'
-          : '&nbsp;&nbsp;<a href="reserve.html">Reserve</a>') +
-        '&nbsp;&nbsp;<a href="#" id="nav-logout">Log Out</a>' +
+      '<span class="nav-user-name">' + profile.first_name +
+      (profile.role === 'admin'
+        ? '&nbsp;&nbsp;<a href="admin.html" style="color:var(--gold)">Admin</a>'
+        : '&nbsp;&nbsp;<a href="reserve.html" style="color:var(--gold)">Reserve</a>') +
+      '&nbsp;&nbsp;<a href="#" id="nav-logout" style="color:var(--cream-dim)">Log Out</a>' +
       '</span>';
     document.getElementById('nav-logout').onclick = async e => {
       e.preventDefault();
@@ -53,8 +62,12 @@ async function updateNav() {
   } else {
     navRight.innerHTML =
       '<span class="nav-phone">203-970-4873</span>' +
-      '<a href="login.html" class="btn-nav">Join / Log In</a>';
+      '<a href="login.html" class="btn-nav">Log In</a>' +
+      '&nbsp;&nbsp;<a href="login.html" onclick="sessionStorage.setItem(\'tab\',\'signup\')" style="font-family:\'Barlow Condensed\',sans-serif;font-size:0.75rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--cream-dim)">Join Free</a>';
   }
+
+  navRight.style.opacity = '1';
+  navRight.style.transition = 'opacity 0.3s';
 }
 
 // ---- NAV ACTIVE STATE ----
@@ -106,7 +119,7 @@ function showFlash(msg, type = 'success') {
   if (!el) {
     el = document.createElement('div');
     el.id = 'flash';
-    el.style.cssText = 'position:fixed;top:72px;left:50%;transform:translateX(-50%);padding:0.75rem 1.75rem;z-index:9999;font-family:"Barlow Condensed",sans-serif;font-size:0.85rem;letter-spacing:0.12em;text-transform:uppercase;border:1px solid;transition:opacity 0.4s;white-space:nowrap;';
+    el.style.cssText = 'position:fixed;top:72px;left:50%;transform:translateX(-50%);padding:0.75rem 1.75rem;z-index:9999;font-family:"Barlow Condensed",sans-serif;font-size:0.85rem;letter-spacing:0.12em;text-transform:uppercase;border:1px solid;transition:opacity 0.4s;white-space:nowrap;border-radius:2px;';
     document.body.appendChild(el);
   }
   el.style.background = type === 'success' ? '#1a2f1a' : '#2f1a1a';
