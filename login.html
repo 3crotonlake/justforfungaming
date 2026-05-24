@@ -53,22 +53,27 @@
     }
     .tab-btn {
       font-family: 'Barlow Condensed', sans-serif;
-      font-size: 0.78rem;
+      font-size: 1rem;
       letter-spacing: 0.15em;
       text-transform: uppercase;
-      padding: 0.85rem;
+      font-weight: 700;
+      padding: 1rem;
       text-align: center;
       cursor: pointer;
       border: none;
       background: transparent;
       color: var(--text-muted);
-      border-bottom: 2px solid transparent;
+      border-bottom: 3px solid transparent;
       transition: all 0.2s;
     }
     .tab-btn.active {
       color: var(--gold);
       border-bottom-color: var(--gold);
-      background: rgba(201,168,76,0.05);
+      background: rgba(201,168,76,0.07);
+    }
+    .tab-btn:not(.active):hover {
+      color: var(--cream-dim);
+      background: rgba(255,255,255,0.03);
     }
     .panel { display: none; }
     .panel.active { display: block; }
@@ -303,11 +308,9 @@
 <script>
   // Redirect if already logged in
   document.addEventListener('DOMContentLoaded', async () => {
-    const sb = getSupabase();
-    const { data: { user } } = await sb.auth.getUser();
-    if (user) {
-      const profile = await getCurrentUser();
-      window.location.href = profile?.role === 'admin' ? 'admin.html' : 'reserve.html';
+    const profile = await getProfile();
+    if (profile) {
+      window.location.href = profile.role === 'admin' ? 'admin.html' : 'reserve.html';
     }
   });
 
@@ -365,7 +368,7 @@
 
     try {
       await logIn({ email, password });
-      const profile = await getCurrentUser();
+      const profile = await getProfile();
       showFlash('Welcome back, ' + (profile?.first_name || '') + '!');
       setTimeout(() => {
         window.location.href = profile?.role === 'admin' ? 'admin.html' : 'reserve.html';

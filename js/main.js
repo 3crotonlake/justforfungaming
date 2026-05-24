@@ -5,14 +5,56 @@
 const SUPABASE_URL = 'https://ghdnxwhtoweblkzrljpp.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_TqISQhtWWcIlgyZIj3M-MA_Fv22X3jx';
 
-let _supabase = null;
-function getSupabase() {
-  if (!_supabase && window.supabase) {
-    _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-      auth: { persistSession: true, storageKey: 'jffg-auth' }
-    });
+let _sb = null;
+function sb() {
+  if (!_sb && window.supabase) {
+    _sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   }
-  return _supabase;
+  return _sb;
+}
+
+let _profile = null;
+
+async function getProfile() {
+  if (_profile) return _profile;
+  try {
+    const client = sb();
+    if (!client) return null;
+    const { data: { session } } = await client.auth.getSession();
+    if (!session) return null;
+    const { data } = await client.from('members').select('*').eq('auth_id', session.user.id).single();
+    _profile = data || null;
+    return _profile;
+  } catch(e) { return null; }
+}
+
+// ---- NAV ----
+async function updateNav() {
+  const navRight = document.getElementById('nav-right');
+  if (!navRight) return;
+
+  const profile = await getProfile();
+
+  if (profile) {
+    navRight.innerHTML =
+      '<span class="nav-user-name">' +
+        profile.first_name +
+        (profile.role === 'admin'
+          ? '&nbsp;&nbsp;<a href="admin.html">Admin</a>'
+          : '&nbsp;&nbsp;<a href="reserve.html">Reserve</a>') +
+        '&nbsp;&nbsp;<a href="#" id="nav-logout">Log Out</a>' +
+      '</span>';
+    document.getElementById('nav-logout').onclick = async e => {
+      e.preventDefault();
+      _profile = null;
+      await sb().auth.signOut();
+      window.location.href = 'index.html';
+    };
+  } else {
+    navRight.innerHTML =
+      '<span class="nav-phone">203-970-4873</span>' +
+      '<a href="login.html" class="btn-nav">Join / Log In</a>';
+  }
 }
 
 // ---- NAV ACTIVE STATE ----
@@ -34,51 +76,14 @@ function initHamburger() {
   });
 }
 
-// ---- AUTH ----
-let _currentUser = null;
-
-async function getCurrentUser() {
-  try {
-    const sb = getSupabase();
-    if (!sb) return null;
-    const { data: { session } } = await sb.auth.getSession();
-    if (!session) return null;
-    const { data: profile } = await sb.from('members').select('*').eq('auth_id', session.user.id).single();
-    _currentUser = profile || null;
-    return _currentUser;
-  } catch(e) { return null; }
-}
-
-async function updateNav() {
-  const navRight = document.getElementById('nav-right');
-  if (!navRight) return;
-  navRight.innerHTML = '<span class="nav-phone">203-970-4873</span><a href="login.html" class="btn-nav">Join / Log In</a>';
-  try {
-    const profile = await getCurrentUser();
-    if (!profile) return;
-    navRight.innerHTML =
-      '<span class="nav-user-name">' + profile.first_name +
-      (profile.role === 'admin'
-        ? ' &nbsp;<a href="admin.html">Admin</a>'
-        : ' &nbsp;<a href="reserve.html">Reserve</a>') +
-      ' &nbsp;<a href="#" id="nav-logout">Log Out</a></span>';
-    document.getElementById('nav-logout').addEventListener('click', async e => {
-      e.preventDefault();
-      await getSupabase().auth.signOut();
-      window.location.href = 'index.html';
-    });
-  } catch(e) {}
-}
-
 // ---- SIGN UP ----
 async function signUp({ firstName, lastName, email, password, mobile, games, newsletter }) {
-  const sb = getSupabase();
-  const { data: authData, error: authError } = await sb.auth.signUp({
+  const { data: authData, error: authError } = await sb().auth.signUp({
     email, password,
     options: { data: { first_name: firstName, last_name: lastName } }
   });
   if (authError) throw authError;
-  const { error: profileError } = await sb.from('members').insert({
+  const { error: profileError } = await sb().from('members').insert({
     auth_id: authData.user.id,
     first_name: firstName, last_name: lastName,
     email, mobile: mobile || null,
@@ -90,8 +95,7 @@ async function signUp({ firstName, lastName, email, password, mobile, games, new
 
 // ---- LOG IN ----
 async function logIn({ email, password }) {
-  const sb = getSupabase();
-  const { data, error } = await sb.auth.signInWithPassword({ email, password });
+  const { data, error } = await sb().auth.signInWithPassword({ email, password });
   if (error) throw error;
   return data.user;
 }
@@ -126,43 +130,43 @@ const MockData = {
 
 // ---- RESERVATIONS ----
 async function getUserReservations(memberId) {
-  const { data } = await getSupabase().from('reservations')
+  const { data } = await sb().from('reservations')
     .select('*').eq('member_id', memberId).eq('status', 'confirmed')
     .gte('date', todayStr()).order('date', { ascending: true });
   return data || [];
 }
 
 async function addReservation(res) {
-  const { data, error } = await getSupabase().from('reservations').insert(res).select().single();
+  const { data, error } = await sb().from('reservations').insert(res).select().single();
   if (error) throw error;
   return data;
 }
 
 async function cancelReservation(id) {
-  const { error } = await getSupabase().from('reservations').update({ status: 'cancelled' }).eq('id', id);
+  const { error } = await sb().from('reservations').update({ status: 'cancelled' }).eq('id', id);
   if (error) throw error;
 }
 
 // ---- ADMIN ----
 async function getAllMembers() {
-  const { data } = await getSupabase().from('members').select('*').order('created_at', { ascending: false });
+  const { data } = await sb().from('members').select('*').order('created_at', { ascending: false });
   return data || [];
 }
 
 async function getAllReservations() {
-  const { data } = await getSupabase().from('reservations')
+  const { data } = await sb().from('reservations')
     .select('*').eq('status', 'confirmed')
     .gte('date', todayStr()).order('date', { ascending: true });
   return data || [];
 }
 
 async function updateMemberRole(memberId, role) {
-  const { error } = await getSupabase().from('members').update({ role }).eq('id', memberId);
+  const { error } = await sb().from('members').update({ role }).eq('id', memberId);
   if (error) throw error;
 }
 
 async function deleteMember(memberId) {
-  const { error } = await getSupabase().from('members').delete().eq('id', memberId);
+  const { error } = await sb().from('members').delete().eq('id', memberId);
   if (error) throw error;
 }
 
@@ -185,4 +189,7 @@ function formatShort(dateStr) {
 function todayStr() { return new Date().toISOString().split('T')[0]; }
 
 // ---- INIT ----
-document.addEventListener('DOMContentLoaded', () => { updateNav(); initHamburger(); });
+document.addEventListener('DOMContentLoaded', () => {
+  updateNav();
+  initHamburger();
+});

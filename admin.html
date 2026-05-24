@@ -173,7 +173,7 @@ let _allMembers = [];
 let _allReservations = [];
 
 document.addEventListener('DOMContentLoaded', async () => {
-  const profile = await getCurrentUser();
+  const profile = await getProfile();
   if (!profile || profile.role !== 'admin') {
     document.getElementById('admin-ui').style.display = 'none';
     document.getElementById('access-denied').style.display = 'block';
