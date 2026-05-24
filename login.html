@@ -371,7 +371,7 @@
       const profile = await getProfile();
       showFlash('Welcome back, ' + (profile?.first_name || '') + '!');
       setTimeout(() => {
-        window.location.href = profile?.role === 'admin' ? 'admin.html' : 'reserve.html';
+        window.location.replace(profile?.role === 'admin' ? 'admin.html' : 'reserve.html');
       }, 800);
     } catch (err) {
       showFlash(err.message || 'Login failed. Check your email and password.', 'error');

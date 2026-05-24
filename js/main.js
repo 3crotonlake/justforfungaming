@@ -10,7 +10,15 @@ async function getSb() {
   // Wait up to 5 seconds for window.supabase to be defined
   for (let i = 0; i < 50; i++) {
     if (window.supabase) {
-      _sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      _sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+        auth: {
+          persistSession: true,
+          storage: window.localStorage,
+          storageKey: 'jffg-auth-token',
+          autoRefreshToken: true,
+          detectSessionInUrl: true
+        }
+      });
       return _sb;
     }
     await new Promise(r => setTimeout(r, 100));
