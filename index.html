@@ -21,7 +21,7 @@
   </ul>
   <div class="nav-right" id="nav-right">
     <span class="nav-phone">203-970-4873</span>
-    <a href="login.html" class="btn-nav">Join / Log In</a>
+    <a href="login.html" class="btn-nav">Log In</a>&nbsp;&nbsp;<a href="login.html#signup" class="btn-outline" style="padding:0.4rem 1rem;font-size:0.75rem;letter-spacing:0.12em;" onclick="localStorage.setItem('jffg-tab','signup')">Join Free</a>
   </div>
   <button class="nav-hamburger" id="hamburger" aria-label="Menu">
     <span></span><span></span><span></span>
@@ -326,7 +326,7 @@
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="js/main.js"></script>
+<script src="js/main.js?v=4"></script>
 <script>
 function handleContactForm(btn) {
   btn.textContent = '✓ Message Sent!';

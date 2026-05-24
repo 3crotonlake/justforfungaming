@@ -217,17 +217,17 @@
   <div class="auth-card">
     <div class="auth-card-header">
       <div class="auth-store-badge">Just for Fun Gaming · Danbury, CT</div>
-      <div class="auth-heading" id="auth-heading">Join the Community</div>
-      <div class="auth-sub" id="auth-sub">Create your free member account</div>
+      <div class="auth-heading" id="auth-heading">Welcome Back</div>
+      <div class="auth-sub" id="auth-sub">Log in to your member account</div>
     </div>
 
     <div class="tab-row">
-      <button class="tab-btn active" id="tab-signup" onclick="switchTab('signup')">Sign Up</button>
-      <button class="tab-btn" id="tab-login" onclick="switchTab('login')">Log In</button>
+      <button class="tab-btn active" id="tab-login" onclick="switchTab('login')">Log In</button>
+      <button class="tab-btn" id="tab-signup" onclick="switchTab('signup')">Sign Up</button>
     </div>
 
     <!-- SIGNUP PANEL -->
-    <div class="panel active" id="panel-signup">
+    <div class="panel" id="panel-signup">
       <div class="auth-body">
         <div class="form-row">
           <div class="form-group">
@@ -274,11 +274,11 @@
           <span style="font-size:1.1rem;">🎲</span> Continue as Demo Member
         </button>
       </div>
-      <div class="auth-footer-note">Already have an account? <a href="#" onclick="switchTab('login'); return false;">Log in here</a></div>
+      <div class="auth-footer-note">Already have an account? <a href="#" onclick="switchTab('login'); return false;">← Log in here</a></div>
     </div>
 
     <!-- LOGIN PANEL -->
-    <div class="panel" id="panel-login">
+    <div class="panel active" id="panel-login">
       <div class="auth-body">
         <div class="form-group">
           <label class="form-label">Email Address</label>
@@ -292,7 +292,7 @@
         <button class="btn-submit" style="margin-top:1rem;" id="btn-login" onclick="handleLogin()">Log In</button>
 
         </div>
-      <div class="auth-footer-note">New here? <a href="#" onclick="switchTab('signup'); return false;">Create a free account</a></div>
+      <div class="auth-footer-note">New here? <a href="#" onclick="switchTab('signup'); return false;">Create a free account →</a></div>
     </div>
   </div>
 </div>
@@ -304,7 +304,7 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="js/main.js"></script>
+<script src="js/main.js?v=4"></script>
 <script>
   // Redirect if already logged in
   document.addEventListener('DOMContentLoaded', async () => {
@@ -319,8 +319,8 @@
     document.getElementById('tab-login').classList.toggle('active', tab === 'login');
     document.getElementById('panel-signup').classList.toggle('active', tab === 'signup');
     document.getElementById('panel-login').classList.toggle('active', tab === 'login');
-    document.getElementById('auth-heading').textContent = tab === 'signup' ? 'Join the Community' : 'Welcome Back';
-    document.getElementById('auth-sub').textContent = tab === 'signup' ? 'Create your free member account' : 'Log in to your member account';
+    document.getElementById('auth-heading').textContent = tab === 'login' ? 'Welcome Back' : 'Join the Community';
+    document.getElementById('auth-sub').textContent = tab === 'login' ? 'Log in to your member account' : 'Create your free member account';
   }
 
   async function handleSignup() {
