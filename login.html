@@ -345,8 +345,8 @@
 
     try {
       await signUp({ firstName, lastName, email, password, mobile, games, newsletter });
-      showFlash('Account created! Check your email to confirm, then log in.');
-      setTimeout(() => switchTab('login'), 2000);
+      showFlash('Account created! You can now log in.');
+      setTimeout(() => switchTab('login'), 1500);
     } catch (err) {
       showFlash(err.message || 'Signup failed. Please try again.', 'error');
       btn.textContent = 'Create My Account';
@@ -369,10 +369,20 @@
     try {
       await logIn({ email, password });
       const profile = await getProfile();
-      showFlash('Welcome back, ' + (profile?.first_name || '') + '!');
-      setTimeout(() => {
-        window.location.replace(profile?.role === 'admin' ? 'admin.html' : 'reserve.html');
-      }, 800);
+      if (profile) {
+        localStorage.setItem('jffg_profile', JSON.stringify(profile));
+        // Show success and navigation links without redirecting
+        document.getElementById('auth-card').innerHTML = `
+          <div style="padding:2rem;text-align:center;">
+            <div style="font-family:'Cinzel',serif;font-size:1.5rem;color:var(--gold);margin-bottom:0.5rem;">Welcome, ${profile.first_name}!</div>
+            <div style="font-size:1rem;color:var(--cream-dim);font-style:italic;margin-bottom:2rem;">You are logged in as ${profile.role}.</div>
+            <div style="display:flex;flex-direction:column;gap:0.75rem;">
+              <a href="reserve.html" class="btn-primary" style="display:block;text-align:center;text-decoration:none;">Reserve a Table</a>
+              ${profile.role === 'admin' ? '<a href="admin.html" class="btn-primary" style="display:block;text-align:center;text-decoration:none;background:var(--red);">Admin Dashboard</a>' : ''}
+              <a href="index.html" class="btn-outline" style="display:block;text-align:center;text-decoration:none;">Back to Home</a>
+            </div>
+          </div>`;
+      }
     } catch (err) {
       showFlash(err.message || 'Login failed. Check your email and password.', 'error');
       btn.textContent = 'Log In';
