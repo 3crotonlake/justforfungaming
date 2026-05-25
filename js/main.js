@@ -141,8 +141,15 @@ const MockData = {
 
 async function getUserReservations(memberId) {
   const client = await getSb();
-  const { data } = await client.from('reservations').select('*').eq('member_id', memberId).eq('status', 'confirmed').gte('date', todayStr()).order('date', { ascending: true });
-  return data || [];
+  const { data: d1 } = await client.from('reservations').select('*').eq('member_id', memberId).eq('status', 'confirmed').gte('date', todayStr()).order('date', { ascending: true });
+  if (d1 && d1.length > 0) return d1;
+  const profile = await getProfile();
+  if (profile) {
+    const name = profile.first_name + ' ' + profile.last_name;
+    const { data: d2 } = await client.from('reservations').select('*').eq('status', 'confirmed').eq('member_name', name).gte('date', todayStr()).order('date', { ascending: true });
+    return d2 || [];
+  }
+  return [];
 }
 
 async function addReservation(res) {
