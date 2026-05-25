@@ -59,8 +59,8 @@
       user-select: none;
     }
     .cal-day.empty, .cal-day.closed, .cal-day.past { cursor: not-allowed; }
-    .cal-day.closed { color: rgba(138,128,112,0.3); }
-    .cal-day.past { color: rgba(138,128,112,0.25); }
+    .cal-day.closed { color: rgba(138,128,112,0.35); }
+    .cal-day.past { color: rgba(138,128,112,0.4); }
     .cal-day.available:hover { background: rgba(201,168,76,0.12); color: var(--gold); }
     .cal-day.has-res::after {
       content: '';
@@ -74,6 +74,8 @@
     }
     .cal-day.selected { background: var(--gold); color: var(--dark); font-weight: 700; }
     .cal-day.today { outline: 1px solid rgba(201,168,76,0.45); }
+    .cal-day.available { color: var(--cream); }
+    .cal-day.past { text-decoration: line-through; }
     .cal-legend {
       display: flex;
       gap: 1rem;
