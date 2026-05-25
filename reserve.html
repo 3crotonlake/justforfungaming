@@ -287,7 +287,7 @@ let _currentMember = null;
 let _userReservations = null;
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const TIMES  = ['4:30 PM','5:00 PM','5:30 PM','6:00 PM','6:30 PM','7:00 PM','7:30 PM','8:00 PM','8:30 PM','9:00 PM'];
-const TAKEN_SLOTS = { '2026-05-22': ['5:00 PM','6:30 PM','7:00 PM'], '2026-05-23': ['3:00 PM','4:00 PM'] };
+const TAKEN_SLOTS = {}; // Now using real Supabase data
 
 let curYear = new Date().getFullYear(), curMonth = new Date().getMonth(), selDay = null, selTime = null, selTable = null;
 
@@ -414,7 +414,7 @@ function selectTime(el, t) {
   renderTables();
 }
 
-function renderTables() {
+async function renderTables() {
   const ds = dateStr(curYear, curMonth, selDay);
   const takenTimes = TAKEN_SLOTS[ds] || [];
   const tablesSection = document.getElementById('tables-section');
@@ -422,8 +422,14 @@ function renderTables() {
   if (!tablesSection || !tablesList) return;
   tablesSection.style.display = 'block';
 
-  // For demo: table 2 is taken on 5/22 at 7pm
-  const takenTableIds = (ds === '2026-05-22' && selTime === '7:00 PM') ? [2] : [];
+  // Query real reservations for this date and time
+  const client = await getSb();
+  const { data: existingRes } = await client.from('reservations')
+    .select('table_id')
+    .eq('date', dateStr(curYear, curMonth, selDay))
+    .eq('start_time', selTime)
+    .eq('status', 'confirmed');
+  const takenTableIds = (existingRes || []).map(r => r.table_id);
 
   tablesList.innerHTML = MockData.tables.map(t => {
     const taken = takenTableIds.includes(t.id);
