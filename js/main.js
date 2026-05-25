@@ -57,10 +57,10 @@ async function getProfile() {
 }
 
 async function updateNav() {
-  const navRight = document.getElementById('nav-right');
-  if (!navRight) return;
-  navRight.innerHTML = '<span class="nav-phone">203-970-4873</span><a href="login.html" class="btn-nav">Log In</a>&nbsp;&nbsp;<a href="login.html" style="font-family:\'Barlow Condensed\',sans-serif;font-size:0.75rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--cream-dim);text-decoration:none;">Join Free</a>';
   try {
+    const navRight = document.getElementById('nav-right');
+    if (!navRight) return;
+    navRight.innerHTML = '<span class="nav-phone">203-970-4873</span><a href="login.html" class="btn-nav">Log In</a>&nbsp;&nbsp;<a href="login.html" style="font-family:\'Barlow Condensed\',sans-serif;font-size:0.75rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--cream-dim);text-decoration:none;">Join Free</a>';
     const profile = await getProfile();
     if (!profile) return;
     navRight.innerHTML =
@@ -68,7 +68,8 @@ async function updateNav() {
       '<span style="color:var(--gold)">' + profile.first_name.toUpperCase() + '</span>' +
       (profile.role === 'admin' ? '&nbsp;&nbsp;<a href="admin.html" style="color:var(--cream-dim);text-decoration:none;font-size:0.75rem;">ADMIN</a>' : '&nbsp;&nbsp;<a href="reserve.html" style="color:var(--cream-dim);text-decoration:none;font-size:0.75rem;">RESERVE</a>') +
       '&nbsp;&nbsp;<a href="#" id="nav-logout" style="color:var(--red-bright);text-decoration:none;font-size:0.75rem;">LOG OUT</a></span>';
-    document.getElementById('nav-logout').onclick = async e => {
+    const btn = document.getElementById('nav-logout');
+    if (btn) btn.onclick = async e => {
       e.preventDefault();
       _profile = null;
       localStorage.removeItem('jffg_profile');
@@ -76,7 +77,7 @@ async function updateNav() {
       await client.auth.signOut();
       window.location.href = 'index.html';
     };
-  } catch(e) {}
+  } catch(e) { console.log('nav error:', e.message); }
 }
 
 (function () {
