@@ -1,7 +1,7 @@
 /* Just for Fun Gaming — main.js */
 
 const SUPABASE_URL = 'https://ghdnxwhtoweblkzrljpp.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_TqISQhtWWcIlgyZIj3M-MA_Fv22X3jx';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdoZG54d2h0b3dlYmxrenJsanBwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk1NjMzMjEsImV4cCI6MjA5NTEzOTMyMX0.WPiQgbmKe5JWD3m_hGoP7YeAeFiUtTksVJWEVakc_2g';
 
 let _sb = null;
 
@@ -12,12 +12,13 @@ async function getSb() {
       _sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
         auth: {
           persistSession: true,
-          storageKey: 'jffg-auth',
           storage: window.localStorage,
           autoRefreshToken: true,
           detectSessionInUrl: false
         }
       });
+      // Wait for session to be restored from localStorage
+      await new Promise(r => setTimeout(r, 200));
       return _sb;
     }
     await new Promise(r => setTimeout(r, 100));
