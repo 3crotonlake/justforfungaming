@@ -51,17 +51,19 @@
       justify-content: center;
       font-family: 'Barlow Condensed', sans-serif;
       font-size: 0.85rem;
-      color: var(--cream-dim);
+      color: var(--cream);
       cursor: pointer;
       border-radius: 2px;
       position: relative;
       transition: all 0.15s;
       user-select: none;
+      font-weight: 600;
     }
-    .cal-day.empty, .cal-day.closed, .cal-day.past { cursor: not-allowed; }
-    .cal-day.closed { color: rgba(138,128,112,0.35); }
-    .cal-day.past { color: rgba(138,128,112,0.4); }
-    .cal-day.available:hover { background: rgba(201,168,76,0.12); color: var(--gold); }
+    .cal-day.empty { cursor: default; color: transparent; }
+    .cal-day.closed { cursor: not-allowed; color: rgba(138,128,112,0.4); font-weight: 400; }
+    .cal-day.past { cursor: not-allowed; color: rgba(138,128,112,0.5); font-weight: 400; text-decoration: line-through; }
+    .cal-day.available { color: var(--cream); background: rgba(201,168,76,0.08); }
+    .cal-day.available:hover { background: rgba(201,168,76,0.25); color: var(--gold); }
     .cal-day.has-res::after {
       content: '';
       position: absolute;
@@ -73,9 +75,7 @@
       border-radius: 50%;
     }
     .cal-day.selected { background: var(--gold); color: var(--dark); font-weight: 700; }
-    .cal-day.today { outline: 1px solid rgba(201,168,76,0.45); }
-    .cal-day.available { color: var(--cream); }
-    .cal-day.past { text-decoration: line-through; }
+    .cal-day.today { outline: 2px solid var(--gold); }
     .cal-legend {
       display: flex;
       gap: 1rem;
