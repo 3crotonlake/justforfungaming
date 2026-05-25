@@ -122,7 +122,7 @@
       <div class="tab-content" id="tab-reservations">
         <div class="sec-title">Upcoming Reservations <button class="sec-action" onclick="exportReservations()">Export CSV</button></div>
         <table class="data-table" id="res-table">
-          <thead><tr><th>Date & Time</th><th>Member</th><th>Table</th><th>Game</th><th>Players</th><th>Notes</th></tr></thead>
+          <thead><tr><th>Date & Time</th><th>Member</th><th>Table</th><th>Game</th><th>Players</th><th>Notes</th><th></th></tr></thead>
           <tbody id="res-tbody"><tr><td colspan="6" class="empty-state">Loading...</td></tr></tbody>
         </table>
       </div>
@@ -298,6 +298,7 @@ function renderReservations(reservations) {
       <td>${gameBadge(r.game || 'TBD')}</td>
       <td style="text-align:center;">${r.players || '—'}</td>
       <td style="font-style:italic;font-size:.8rem;color:var(--text-muted);">${r.notes || '—'}</td>
+      <td><button onclick="adminCancel('${r.id}','${r.member_name || ''}')" style="font-family:'Barlow Condensed',sans-serif;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;padding:.25rem .6rem;cursor:pointer;border:1px solid rgba(139,32,32,.4);background:transparent;color:#E87070;">Cancel</button></td>
     </tr>`;
   }).join('');
 }
