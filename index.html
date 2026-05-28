@@ -4,8 +4,415 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Just for Fun Gaming — Danbury, CT</title>
-  <meta name="description" content="Just for Fun Gaming is a board game and tabletop RPG store in Danbury, CT. Free play time, snacks, and a community of passionate gamers.">
+  <meta name="description" content="Your local game headquarters in Danbury, CT. Board games, Warhammer, D&D, Magic and more. Free play time every night.">
   <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: #f8f6f1;
+      color: #1a1a2e;
+      font-family: 'Nunito', sans-serif;
+    }
+
+    /* NAV */
+    nav.site-nav {
+      background: #fff;
+      border-bottom: 2px solid #e8e0d0;
+      height: 68px;
+    }
+    .nav-logo {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900;
+      font-size: 1.1rem;
+      line-height: 1.2;
+      color: #2d1b69;
+      text-decoration: none;
+    }
+    .nav-logo span { color: #e85d04; }
+    .nav-links a { color: #444; }
+    .nav-links a:hover, .nav-links a.active { color: #2d1b69; }
+    .btn-nav {
+      background: #2d1b69;
+      color: #fff;
+      border-radius: 24px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+    }
+    .btn-nav:hover { background: #4a2fa0; }
+
+    /* HERO */
+    .hero {
+      background: linear-gradient(135deg, #2d1b69 0%, #1a1040 50%, #0d0820 100%);
+      padding: 5rem 2rem 4rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 30% 50%, rgba(232,93,4,0.15) 0%, transparent 60%),
+                  radial-gradient(circle at 70% 30%, rgba(74,47,160,0.3) 0%, transparent 50%);
+    }
+    .hero-inner { position: relative; z-index: 1; max-width: 700px; margin: 0 auto; }
+    .hero-badge {
+      display: inline-block;
+      background: #e85d04;
+      color: #fff;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.35rem 1rem;
+      border-radius: 24px;
+      margin-bottom: 1.25rem;
+    }
+    .hero-title {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900;
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      color: #fff;
+      line-height: 1.1;
+      margin-bottom: 0.25rem;
+    }
+    .hero-title .fun { color: #ffd166; }
+    .hero-title .gaming {
+      display: block;
+      font-size: clamp(1.5rem, 4vw, 2.2rem);
+      color: #a78bfa;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .hero-sub {
+      font-size: 1.15rem;
+      color: rgba(255,255,255,0.8);
+      margin: 1.25rem 0 2rem;
+      line-height: 1.6;
+    }
+    .hero-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn-hero-primary {
+      background: #e85d04;
+      color: #fff;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 1rem;
+      padding: 0.85rem 2rem;
+      border-radius: 32px;
+      text-decoration: none;
+      display: inline-block;
+      transition: transform 0.15s, background 0.15s;
+    }
+    .btn-hero-primary:hover { background: #c94d00; transform: translateY(-2px); }
+    .btn-hero-secondary {
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      padding: 0.85rem 2rem;
+      border-radius: 32px;
+      text-decoration: none;
+      display: inline-block;
+      border: 2px solid rgba(255,255,255,0.3);
+      transition: background 0.15s;
+    }
+    .btn-hero-secondary:hover { background: rgba(255,255,255,0.2); }
+
+    /* HOURS BAR */
+    .hours-bar {
+      background: #fff;
+      border-bottom: 2px solid #e8e0d0;
+      padding: 0;
+    }
+    .hours-bar-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      divide-x: 1px solid #e8e0d0;
+    }
+    .hours-item {
+      padding: 1rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border-right: 1px solid #e8e0d0;
+      text-align: center;
+    }
+    .hours-item:last-child { border-right: none; }
+    .hours-label {
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #2d1b69;
+      margin-bottom: 0.2rem;
+    }
+    .hours-value {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #444;
+    }
+
+    /* SECTIONS */
+    .section-light { background: #f8f6f1; padding: 4rem 2rem; }
+    .section-white { background: #fff; padding: 4rem 2rem; border-top: 2px solid #e8e0d0; border-bottom: 2px solid #e8e0d0; }
+    .section-purple { background: #2d1b69; padding: 4rem 2rem; }
+    .section-inner { max-width: 900px; margin: 0 auto; }
+    .section-eyebrow {
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #e85d04;
+      margin-bottom: 0.5rem;
+    }
+    .section-title {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900;
+      font-size: clamp(1.75rem, 4vw, 2.25rem);
+      color: #1a1a2e;
+      margin-bottom: 0.75rem;
+      line-height: 1.2;
+    }
+    .section-title.white { color: #fff; }
+    .section-sub {
+      font-size: 1rem;
+      color: #666;
+      line-height: 1.7;
+      max-width: 560px;
+    }
+    .section-sub.white { color: rgba(255,255,255,0.8); }
+
+    /* GAMES GRID */
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 0.75rem;
+      margin-top: 2rem;
+    }
+    .game-card {
+      background: #fff;
+      border: 2px solid #e8e0d0;
+      border-radius: 16px;
+      padding: 1.25rem 0.75rem;
+      text-align: center;
+      transition: border-color 0.15s, transform 0.15s;
+      cursor: default;
+    }
+    .game-card:hover { border-color: #2d1b69; transform: translateY(-3px); }
+    .game-icon { font-size: 2rem; display: block; margin-bottom: 0.5rem; }
+    .game-name {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #333;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      line-height: 1.3;
+    }
+
+    /* NEWS CARDS */
+    .news-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; margin-top: 1.5rem; }
+    .news-card {
+      background: #fff;
+      border: 2px solid #e8e0d0;
+      border-radius: 16px;
+      padding: 1.25rem 1.5rem;
+      border-left: 5px solid #e85d04;
+    }
+    .news-card.featured { border-left-color: #2d1b69; background: #f5f3ff; }
+    .news-date {
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #e85d04;
+      margin-bottom: 0.35rem;
+    }
+    .news-text { font-size: 0.95rem; color: #333; line-height: 1.6; }
+
+    /* COMMUNITY BLOCK */
+    .community-block {
+      background: #fff;
+      border-radius: 20px;
+      padding: 2.5rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      border: 2px solid rgba(255,255,255,0.2);
+    }
+    .community-quote {
+      font-size: clamp(1.1rem, 2.5vw, 1.35rem);
+      color: #fff;
+      line-height: 1.7;
+      font-style: italic;
+      max-width: 560px;
+      margin: 0 auto 1rem;
+    }
+    .community-attr {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #a78bfa;
+    }
+
+    /* BLOG CARDS */
+    .blog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .blog-card {
+      background: #fff;
+      border: 2px solid #e8e0d0;
+      border-radius: 16px;
+      padding: 1.5rem;
+      text-decoration: none;
+      display: block;
+      transition: border-color 0.15s, transform 0.15s;
+    }
+    .blog-card:hover { border-color: #2d1b69; transform: translateY(-3px); }
+    .blog-tag {
+      display: inline-block;
+      background: #f0ecff;
+      color: #2d1b69;
+      font-size: 0.65rem;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.6rem;
+      border-radius: 24px;
+      margin-bottom: 0.75rem;
+    }
+    .blog-title {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 1rem;
+      color: #1a1a2e;
+      line-height: 1.4;
+      margin-bottom: 0.6rem;
+    }
+    .blog-excerpt { font-size: 0.88rem; color: #666; line-height: 1.6; }
+    .blog-read {
+      display: inline-block;
+      margin-top: 0.85rem;
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #e85d04;
+    }
+
+    /* CONTACT */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      align-items: start;
+    }
+    .contact-info-label {
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #2d1b69;
+      margin-bottom: 0.25rem;
+      margin-top: 1rem;
+    }
+    .contact-info-label:first-child { margin-top: 0; }
+    .contact-info-value { font-size: 0.95rem; color: #333; line-height: 1.8; }
+    .form-card {
+      background: #fff;
+      border: 2px solid #e8e0d0;
+      border-radius: 20px;
+      padding: 1.75rem;
+    }
+    .form-input-light, .form-textarea-light {
+      display: block;
+      width: 100%;
+      background: #f8f6f1;
+      border: 2px solid #e8e0d0;
+      border-radius: 10px;
+      color: #1a1a2e;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.95rem;
+      padding: 0.65rem 0.85rem;
+      outline: none;
+      transition: border-color 0.2s;
+      box-sizing: border-box;
+    }
+    .form-input-light:focus, .form-textarea-light:focus { border-color: #2d1b69; }
+    .form-textarea-light { resize: vertical; min-height: 80px; }
+    .form-label-light {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #2d1b69;
+      margin-bottom: 0.35rem;
+    }
+    .form-group-light { margin-bottom: 1rem; }
+    .btn-submit-light {
+      display: block;
+      width: 100%;
+      background: #2d1b69;
+      color: #fff;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 0.9rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border: none;
+      padding: 0.85rem;
+      border-radius: 32px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-submit-light:hover { background: #4a2fa0; }
+    .btn-directions {
+      display: inline-block;
+      margin-top: 1.25rem;
+      background: #f0ecff;
+      color: #2d1b69;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 0.85rem;
+      padding: 0.65rem 1.5rem;
+      border-radius: 32px;
+      text-decoration: none;
+      transition: background 0.15s;
+    }
+    .btn-directions:hover { background: #e0d8ff; }
+
+    /* FOOTER */
+    footer.site-footer {
+      background: #1a1040;
+      border-top: none;
+      color: rgba(255,255,255,0.7);
+    }
+    .footer-logo { color: #ffd166; font-family: 'Nunito', sans-serif; font-weight: 900; }
+    .footer-logo span { color: #a78bfa; }
+    .footer-details { color: rgba(255,255,255,0.6); }
+    .footer-details a { color: rgba(255,255,255,0.6); }
+    .footer-links a { color: rgba(255,255,255,0.5); }
+    .footer-links a:hover { color: #ffd166; }
+    .footer-copy { color: rgba(255,255,255,0.3); }
+
+    /* NAV override for light theme */
+    .nav-user-name { color: #333; }
+    .nav-user-name a { color: #2d1b69; }
+
+    @media (max-width: 680px) {
+      .hours-bar-inner { grid-template-columns: 1fr; }
+      .hours-item { border-right: none; border-bottom: 1px solid #e8e0d0; }
+      .contact-grid { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
 
@@ -20,222 +427,183 @@
     <li><a href="index.html#contact">Contact</a></li>
   </ul>
   <div class="nav-right" id="nav-right">
-    <span class="nav-phone">203-970-4873</span>
-    <a href="login.html" class="btn-nav">Log In</a>&nbsp;&nbsp;<a href="login.html#signup" class="btn-outline" style="padding:0.4rem 1rem;font-size:0.75rem;letter-spacing:0.12em;" onclick="localStorage.setItem('jffg-tab','signup')">Join Free</a>
+    <span class="nav-phone" style="color:#666;">203-970-4873</span>
+    <a href="login.html" class="btn-nav">Log In</a>
+    &nbsp;<a href="login.html" style="font-family:'Nunito',sans-serif;font-size:0.8rem;font-weight:700;color:#2d1b69;text-decoration:none;">Join Free</a>
   </div>
-  <button class="nav-hamburger" id="hamburger" aria-label="Menu">
-    <span></span><span></span><span></span>
-  </button>
+  <button class="nav-hamburger" id="hamburger"><span></span><span></span><span></span></button>
 </nav>
-
 <div class="nav-mobile-menu" id="mobile-menu">
   <a href="index.html#games">Games</a>
   <a href="index.html#news">News</a>
   <a href="blog.html">Blog</a>
   <a href="reserve.html">Reserve a Table</a>
   <a href="index.html#contact">Contact</a>
-  <a href="login.html">Join / Log In</a>
+  <a href="login.html">Log In / Join Free</a>
 </div>
 
 <!-- HERO -->
-<section class="grid-bg" style="
-  min-height: 540px;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  text-align: center; padding: 5rem 2rem 4rem;
-  background: radial-gradient(ellipse at 50% 60%, #1a2040 0%, var(--dark) 70%);
-  overflow: hidden;">
-
-  <p class="page-eyebrow fade-up" style="margin-bottom:1.2rem;">130 Federal Road · Danbury, CT · Now Open</p>
-
-  <h1 class="fade-up-1" style="font-family:'Cinzel',serif; font-weight:900; line-height:1.0; margin-bottom:0.3rem;">
-    <span style="display:block; font-size:clamp(3rem,8vw,5rem); color:var(--gold);">Just</span>
-    <span style="display:block; font-size:clamp(1.4rem,4vw,2.2rem); color:var(--cream-dim); font-weight:400; font-style:italic; font-family:'Crimson Pro',serif; letter-spacing:0.2em; margin:-0.15rem 0;">for</span>
-    <span style="display:block; font-size:clamp(3rem,8vw,5rem); color:#4A90D9;">Fun</span>
-  </h1>
-
-  <div class="fade-up-2" style="display:inline-block; background:var(--red); padding:0.4rem 2.5rem; margin:0.5rem 0 1.5rem;">
-    <span style="font-family:'Cinzel',serif; font-size:clamp(1rem,3vw,1.5rem); font-weight:700; color:var(--cream); letter-spacing:0.3em;">GAMING</span>
-  </div>
-
-  <p class="fade-up-3" style="font-size:clamp(1rem,2.5vw,1.2rem); color:var(--cream-dim); font-style:italic; max-width:480px; line-height:1.7; margin-bottom:2rem;">
-    A store run by game players, for game players.<br>Come in, pull up a chair, roll some dice.
-  </p>
-
-  <div class="fade-up-4" style="display:flex; gap:1rem; flex-wrap:wrap; justify-content:center;">
-    <a href="#games" class="btn-primary">See What We Carry</a>
-    <a href="reserve.html" class="btn-outline">Reserve a Table</a>
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">🎲 Now Open in Danbury, CT</div>
+    <h1 class="hero-title">
+      Your Local <span class="fun">Game</span>
+      <span class="gaming">Headquarters</span>
+    </h1>
+    <p class="hero-sub">Board games, card games, RPGs, tabletop miniatures — buy, play, and connect with the Danbury gaming community.</p>
+    <div class="hero-buttons">
+      <a href="reserve.html" class="btn-hero-primary">Reserve a Table →</a>
+      <a href="login.html" class="btn-hero-secondary">Join Free</a>
+    </div>
   </div>
 </section>
 
-<!-- INFO BAR -->
-<div class="info-bar">
-  <div class="info-item">
-    <span class="info-label">Hours</span>
-    <span class="info-value">Tue–Fri 4:30–10 PM &nbsp;·&nbsp; Sat–Sun 3:00–10 PM &nbsp;·&nbsp; Closed Mondays</span>
-  </div>
-  <div class="info-item">
-    <span class="info-label">Location</span>
-    <span class="info-value"><a href="https://maps.google.com/?q=130+Federal+Rd+Danbury+CT" target="_blank" style="color:var(--cream); text-decoration:none;">130 Federal Rd, Danbury CT</a></span>
+<!-- HOURS BAR -->
+<div class="hours-bar">
+  <div class="hours-bar-inner">
+    <div class="hours-item">
+      <div class="hours-label">📍 Location</div>
+      <div class="hours-value"><a href="https://maps.google.com/?q=130+Federal+Rd+Danbury+CT" target="_blank" style="color:#2d1b69;text-decoration:none;">130 Federal Rd, Danbury CT</a></div>
+    </div>
+    <div class="hours-item">
+      <div class="hours-label">🕐 Tue – Fri</div>
+      <div class="hours-value">4:30 PM – 10:00 PM</div>
+    </div>
+    <div class="hours-item">
+      <div class="hours-label">🕐 Sat – Sun</div>
+      <div class="hours-value">3:00 PM – 10:00 PM</div>
+    </div>
   </div>
 </div>
 
 <!-- NEWS -->
-<section class="section" id="news" style="background:var(--dark);">
+<section class="section-light" id="news">
   <div class="section-inner">
-    <p class="section-label">Latest from the store</p>
-    <h2 class="section-title">News &amp; Updates</h2>
-
-    <div style="background:var(--dark-card); border:1px solid var(--border); border-left:3px solid var(--gold); padding:1.25rem 1.5rem; margin-bottom:1rem;">
-      <div style="font-family:'Barlow Condensed',sans-serif; font-size:0.65rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--gold); margin-bottom:0.3rem;">May 22, 2026 — Grand Opening Week</div>
-      <div style="font-size:1.05rem; line-height:1.7;">The store is officially open! Come by any evening to check out the space, meet other players, and jump into a game. Intro sessions for Warhammer 40K, BattleTech, D&amp;D, and more coming soon — <a href="login.html" style="color:var(--gold);">join the mailing list</a> to be the first to know.</div>
-    </div>
-
-    <div style="border-bottom:1px solid rgba(201,168,76,0.1); padding:0.9rem 0; display:grid; grid-template-columns:110px 1fr; gap:1rem;">
-      <span style="font-family:'Barlow Condensed',sans-serif; font-size:0.65rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--gold);">May 15</span>
-      <span style="font-size:0.95rem; color:var(--cream-dim); line-height:1.6;">All inspections passed! Grand opening set for May 21st. New 40K releases, Horus Heresy Custodes, and Lorcana card packs already in stock.</span>
-    </div>
-    <div style="border-bottom:1px solid rgba(201,168,76,0.1); padding:0.9rem 0; display:grid; grid-template-columns:110px 1fr; gap:1rem;">
-      <span style="font-family:'Barlow Condensed',sans-serif; font-size:0.65rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--gold);">Apr 26</span>
-      <span style="font-size:0.95rem; color:var(--cream-dim); line-height:1.6;">Regular beginner sessions confirmed for D&amp;D, BattleTech, Warhammer 40K, Horus Heresy, Age of Sigmar, and Dropfleet Commander. Sign up to get notified.</span>
-    </div>
-    <div style="padding:0.9rem 0; display:grid; grid-template-columns:110px 1fr; gap:1rem;">
-      <span style="font-family:'Barlow Condensed',sans-serif; font-size:0.65rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--gold);">Apr 8</span>
-      <span style="font-size:0.95rem; color:var(--cream-dim); line-height:1.6;">New BattleTech starter sets and Warhammer Horus Heresy Custodes releases on order. Building out the terrain library for the hex mat table.</span>
+    <div class="section-eyebrow">Latest from the store</div>
+    <h2 class="section-title">What's Happening at the Store</h2>
+    <div class="news-grid">
+      <div class="news-card featured">
+        <div class="news-date">May 22, 2026 — Grand Opening Week</div>
+        <div class="news-text">We're officially open! Come by any evening to check out the space, meet other players, and jump into a game. Intro sessions for Warhammer 40K, BattleTech, D&amp;D, and more coming soon — <a href="login.html" style="color:#2d1b69;font-weight:700;">join the mailing list</a> to be the first to know.</div>
+      </div>
+      <div class="news-card">
+        <div class="news-date">May 15</div>
+        <div class="news-text">All inspections passed! Grand opening set for May 21st. New 40K releases, Horus Heresy Custodes, and Lorcana card packs already in stock.</div>
+      </div>
+      <div class="news-card">
+        <div class="news-date">Apr 26</div>
+        <div class="news-text">Regular beginner sessions confirmed for D&amp;D, BattleTech, Warhammer 40K, Horus Heresy, Age of Sigmar, and Dropfleet Commander.</div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- GAMES WE CARRY -->
-<section class="section" id="games" style="background:var(--dark-surface); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+<!-- GAMES -->
+<section class="section-white" id="games">
   <div class="section-inner">
-    <p class="section-label" style="text-align:center;">What we carry</p>
-    <h2 class="section-title centered">Games for Every Kind of Player</h2>
-    <div class="divider"></div>
-    <p style="text-align:center; font-size:1rem; color:var(--text-muted); font-style:italic; margin-bottom:2rem; max-width:540px; margin-left:auto; margin-right:auto;">
-      We stock RPGs, classic board games, tabletop miniature games, trading card games, and accessories. If we don't have it, ask us — we'll order it.
-    </p>
-
-    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px,1fr)); gap:0.75rem;">
-      <div class="game-tag-card"><span class="gtc-icon">🐉</span><span class="gtc-name">Dungeons &amp; Dragons</span></div>
-      <div class="game-tag-card"><span class="gtc-icon">⚙️</span><span class="gtc-name">Warhammer 40,000</span></div>
-      <div class="game-tag-card"><span class="gtc-icon">🤖</span><span class="gtc-name">BattleTech</span></div>
-      <div class="game-tag-card"><span class="gtc-icon">🧙</span><span class="gtc-name">Pathfinder</span></div>
-      <div class="game-tag-card"><span class="gtc-icon">🚀</span><span class="gtc-name">Dropfleet Commander</span></div>
-      <div class="game-tag-card"><span class="gtc-icon">🎴</span><span class="gtc-name">Magic: The Gathering</span></div>
-      <div class="game-tag-card"><span class="gtc-icon">⚡</span><span class="gtc-name">Pokémon TCG</span></div>
-      <div class="game-tag-card"><span class="gtc-icon">🃏</span><span class="gtc-name">Lorcana</span></div>
-      <div class="game-tag-card"><span class="gtc-icon">⚔️</span><span class="gtc-name">Horus Heresy</span></div>
-      <div class="game-tag-card"><span class="gtc-icon">🗡️</span><span class="gtc-name">Kings of War</span></div>
-      <div class="game-tag-card"><span class="gtc-icon">🪖</span><span class="gtc-name">Halo Flashpoint</span></div>
-      <div class="game-tag-card"><span class="gtc-icon">🎲</span><span class="gtc-name">Classic Board Games</span></div>
+    <div class="section-eyebrow">What we carry</div>
+    <h2 class="section-title">Games for Every Kind of Player</h2>
+    <p class="section-sub">We stock RPGs, classic board games, tabletop miniature games, trading card games, and accessories. If we don't have it, ask us — we'll order it.</p>
+    <div class="games-grid">
+      <div class="game-card"><span class="game-icon">🐉</span><span class="game-name">D&D</span></div>
+      <div class="game-card"><span class="game-icon">⚙️</span><span class="game-name">Warhammer 40K</span></div>
+      <div class="game-card"><span class="game-icon">🤖</span><span class="game-name">BattleTech</span></div>
+      <div class="game-card"><span class="game-icon">🧙</span><span class="game-name">Pathfinder</span></div>
+      <div class="game-card"><span class="game-icon">🚀</span><span class="game-name">Dropfleet</span></div>
+      <div class="game-card"><span class="game-icon">🎴</span><span class="game-name">Magic: TG</span></div>
+      <div class="game-card"><span class="game-icon">⚡</span><span class="game-name">Pokémon</span></div>
+      <div class="game-card"><span class="game-icon">🃏</span><span class="game-name">Lorcana</span></div>
+      <div class="game-card"><span class="game-icon">⚔️</span><span class="game-name">Horus Heresy</span></div>
+      <div class="game-card"><span class="game-icon">🗡️</span><span class="game-name">Kings of War</span></div>
+      <div class="game-card"><span class="game-icon">🪖</span><span class="game-name">Halo Flashpoint</span></div>
+      <div class="game-card"><span class="game-icon">🎲</span><span class="game-name">Board Games</span></div>
     </div>
   </div>
 </section>
 
 <!-- COMMUNITY -->
-<section class="section" style="background:var(--dark);">
+<section class="section-purple">
   <div class="section-inner">
-    <div style="background:linear-gradient(135deg,#1a2040,var(--dark-card)); border:1px solid rgba(74,144,217,0.3); padding:3rem 2rem; text-align:center; margin-bottom:1rem;">
-      <p style="font-family:'Cinzel',serif; font-size:0.75rem; letter-spacing:0.2em; color:#4A90D9; margin-bottom:1rem;">Our Mission</p>
-      <blockquote style="font-size:clamp(1.1rem,2.5vw,1.4rem); font-style:italic; color:var(--cream); line-height:1.7; max-width:600px; margin:0 auto 1rem;">
-        "We are trying to build a community where people feel comfortable hanging out, playing, making new friends, and having a great time."
-      </blockquote>
-      <cite style="font-family:'Barlow Condensed',sans-serif; font-size:0.75rem; letter-spacing:0.15em; text-transform:uppercase; color:#4A90D9; font-style:normal;">— Toby, founder</cite>
+    <div class="community-block" style="background:rgba(255,255,255,0.08);border:2px solid rgba(255,255,255,0.12);border-radius:20px;padding:2.5rem;text-align:center;">
+      <div style="font-size:0.72rem;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:#a78bfa;margin-bottom:1rem;">Our Mission</div>
+      <blockquote class="community-quote">"We are trying to build a community where people feel comfortable hanging out, playing, making new friends, and having a great time."</blockquote>
+      <cite class="community-attr">— Toby, Founder</cite>
     </div>
-    <p style="text-align:center; font-size:1rem; color:var(--text-muted); margin-top:1.25rem; font-style:italic;">
-      Play time is free. Come in, find a game, make a friend. We sell snacks, drinks, and games — the rest is up to you.
-    </p>
-    <div style="text-align:center; margin-top:1.75rem; display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
-      <a href="login.html" class="btn-primary">Join the Community</a>
-      <a href="reserve.html" class="btn-outline">Reserve a Table</a>
+    <p style="text-align:center;color:rgba(255,255,255,0.7);margin-top:1.25rem;font-size:1rem;">Play time is free. Come in, find a game, make a friend. We sell snacks, drinks, and games — the rest is up to you.</p>
+    <div style="text-align:center;margin-top:1.75rem;display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+      <a href="login.html" class="btn-hero-primary">Join the Community</a>
+      <a href="reserve.html" class="btn-hero-secondary">Reserve a Table</a>
     </div>
   </div>
 </section>
 
-<!-- BLOG PREVIEW -->
-<section class="section" style="background:var(--dark-surface); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+<!-- BLOG -->
+<section class="section-light">
   <div class="section-inner">
-    <p class="section-label">From the blog</p>
+    <div class="section-eyebrow">From the blog</div>
     <h2 class="section-title">The Gamer's Corner</h2>
-    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:1rem; margin-top:1.25rem;">
-
-      <a href="blog.html#warhammer-beginners" class="blog-card-link">
-        <div class="blog-card">
-          <span class="blog-tag">Beginner Guide</span>
-          <div class="blog-title">So You Want to Play Warhammer 40K — Where Do You Start?</div>
-          <div class="blog-excerpt">The hobby can feel overwhelming from the outside. Here's how to take your first steps without breaking the bank or losing your mind.</div>
-          <span class="blog-read">Read more →</span>
-        </div>
+    <div class="blog-grid">
+      <a href="blog.html#warhammer-beginners" class="blog-card">
+        <span class="blog-tag">Beginner Guide</span>
+        <div class="blog-title">So You Want to Play Warhammer 40K — Where Do You Start?</div>
+        <div class="blog-excerpt">The hobby can feel overwhelming from the outside. Here's how to take your first steps without breaking the bank.</div>
+        <span class="blog-read">Read more →</span>
       </a>
-
-      <a href="blog.html#local-game-stores" class="blog-card-link">
-        <div class="blog-card">
-          <span class="blog-tag">Community</span>
-          <div class="blog-title">Why Local Game Stores Matter More Than Ever</div>
-          <div class="blog-excerpt">Amazon can ship you a board game. It can't teach you to play it, introduce you to your next opponent, or stay open until 10 PM on a Tuesday.</div>
-          <span class="blog-read">Read more →</span>
-        </div>
+      <a href="blog.html#local-game-stores" class="blog-card">
+        <span class="blog-tag">Community</span>
+        <div class="blog-title">Why Local Game Stores Matter More Than Ever</div>
+        <div class="blog-excerpt">Amazon can ship you a board game. It can't teach you to play it or introduce you to your next opponent.</div>
+        <span class="blog-read">Read more →</span>
       </a>
-
-      <a href="blog.html#dnd-vs-pathfinder" class="blog-card-link">
-        <div class="blog-card">
-          <span class="blog-tag">Tabletop RPG</span>
-          <div class="blog-title">D&amp;D vs Pathfinder: Which Is Right for Your Group?</div>
-          <div class="blog-excerpt">Both are fantastic. They're also genuinely different experiences. We break down the key distinctions so you can pick the right one.</div>
-          <span class="blog-read">Read more →</span>
-        </div>
+      <a href="blog.html#dnd-vs-pathfinder" class="blog-card">
+        <span class="blog-tag">Tabletop RPG</span>
+        <div class="blog-title">D&amp;D vs Pathfinder: Which Is Right for Your Group?</div>
+        <div class="blog-excerpt">Both are fantastic. They're also genuinely different experiences. We break down the key distinctions.</div>
+        <span class="blog-read">Read more →</span>
       </a>
-
     </div>
-    <div style="text-align:center; margin-top:1.75rem;">
-      <a href="blog.html" class="btn-gold-outline" style="max-width:240px; display:inline-block;">View All Posts →</a>
+    <div style="text-align:center;margin-top:1.75rem;">
+      <a href="blog.html" style="display:inline-block;background:#f0ecff;color:#2d1b69;font-family:'Nunito',sans-serif;font-weight:800;font-size:0.85rem;padding:0.65rem 1.75rem;border-radius:32px;text-decoration:none;">View All Posts →</a>
     </div>
   </div>
 </section>
 
-<!-- CONTACT / FIND US -->
-<section class="section" id="contact" style="background:var(--dark);">
+<!-- CONTACT -->
+<section class="section-white" id="contact">
   <div class="section-inner">
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem; align-items:start;">
+    <div class="contact-grid">
       <div>
-        <p class="section-label">Find Us</p>
-        <h2 class="section-title" style="font-size:1.5rem;">Come Visit</h2>
-        <div style="font-size:1rem; color:var(--cream-dim); line-height:2.2;">
-          <div><strong style="color:var(--gold); font-family:'Barlow Condensed',sans-serif; letter-spacing:0.1em; font-size:0.75rem; text-transform:uppercase;">Address</strong><br>130 Federal Road, Danbury, CT 06811</div>
-          <div style="margin-top:1rem;"><strong style="color:var(--gold); font-family:'Barlow Condensed',sans-serif; letter-spacing:0.1em; font-size:0.75rem; text-transform:uppercase;">Hours</strong><br>
-            Tuesday – Friday: 4:30 PM – 10:00 PM<br>
-            Saturday – Sunday: 3:00 PM – 10:00 PM<br>
-            <em style="color:var(--text-muted);">Closed Mondays</em>
-          </div>
-          <div style="margin-top:1rem;"><strong style="color:var(--gold); font-family:'Barlow Condensed',sans-serif; letter-spacing:0.1em; font-size:0.75rem; text-transform:uppercase;">Phone</strong><br>
-            <a href="tel:2039704873" style="color:var(--cream-dim); text-decoration:none;">203-970-4873</a>
-          </div>
+        <div class="section-eyebrow">Find Us</div>
+        <h2 class="section-title">Come Visit</h2>
+        <div class="contact-info-label">Address</div>
+        <div class="contact-info-value">130 Federal Road<br>Danbury, CT 06811</div>
+        <div class="contact-info-label">Hours</div>
+        <div class="contact-info-value">
+          Tue–Fri: 4:30 PM – 10:00 PM<br>
+          Sat–Sun: 3:00 PM – 10:00 PM<br>
+          <em style="color:#999;">Closed Mondays</em>
         </div>
-        <div style="margin-top:1.5rem;">
-          <a href="https://maps.google.com/?q=130+Federal+Rd+Danbury+CT" target="_blank" class="btn-outline" style="display:inline-block;">Get Directions →</a>
-        </div>
+        <div class="contact-info-label">Phone</div>
+        <div class="contact-info-value"><a href="tel:2039704873" style="color:#2d1b69;text-decoration:none;font-weight:700;">203-970-4873</a></div>
+        <a href="https://maps.google.com/?q=130+Federal+Rd+Danbury+CT" target="_blank" class="btn-directions">Get Directions →</a>
       </div>
-
       <div>
-        <p class="section-label">Get in Touch</p>
-        <h2 class="section-title" style="font-size:1.5rem;">Drop Us a Line</h2>
-        <div class="card">
-          <div class="card-body">
-            <div class="form-group">
-              <label class="form-label">Your Name</label>
-              <input class="form-input" type="text" placeholder="First and last name">
-            </div>
-            <div class="form-group">
-              <label class="form-label">Email</label>
-              <input class="form-input" type="email" placeholder="you@example.com">
-            </div>
-            <div class="form-group">
-              <label class="form-label">Message</label>
-              <textarea class="form-textarea" placeholder="Ask about a game, request a title, or just say hello..."></textarea>
-            </div>
-            <button class="btn-primary" style="width:100%;" onclick="handleContactForm(this)">Send Message</button>
+        <div class="section-eyebrow">Get in Touch</div>
+        <h2 class="section-title">Drop Us a Line</h2>
+        <div class="form-card">
+          <div class="form-group-light">
+            <label class="form-label-light">Your Name</label>
+            <input class="form-input-light" type="text" placeholder="First and last name">
           </div>
+          <div class="form-group-light">
+            <label class="form-label-light">Email</label>
+            <input class="form-input-light" type="email" placeholder="you@example.com">
+          </div>
+          <div class="form-group-light">
+            <label class="form-label-light">Message</label>
+            <textarea class="form-textarea-light" placeholder="Ask about a game, request a title, or just say hello..."></textarea>
+          </div>
+          <button class="btn-submit-light" onclick="handleContact(this)">Send Message</button>
         </div>
       </div>
     </div>
@@ -254,86 +622,18 @@
   </div>
   <div class="footer-details">
     130 Federal Road · Danbury, CT 06811 · <a href="tel:2039704873">203-970-4873</a><br>
-    Tue–Fri 4:30–10 PM · Sat–Sun 3–10 PM · Closed Mondays<br>
-    <a href="http://www.justforfungamingstore.com" target="_blank">www.JustforFunGamingStore.com</a>
+    Tue–Fri 4:30–10 PM · Sat–Sun 3–10 PM · Closed Mondays
   </div>
   <div class="footer-copy">© 2026 Just for Fun Gaming LLC · All rights reserved</div>
 </footer>
 
-<style>
-  .game-tag-card {
-    background: var(--dark-card);
-    border: 1px solid var(--border);
-    padding: 1rem;
-    text-align: center;
-    display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
-  }
-  .gtc-icon { font-size: 1.8rem; }
-  .gtc-name {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 0.72rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--cream-dim);
-    line-height: 1.3;
-  }
-  .blog-card-link { text-decoration: none; }
-  .blog-card {
-    background: var(--dark-card);
-    border: 1px solid var(--border);
-    padding: 1.5rem;
-    height: 100%;
-    transition: border-color 0.2s;
-  }
-  .blog-card-link:hover .blog-card { border-color: rgba(201,168,76,0.5); }
-  .blog-tag {
-    display: inline-block;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 0.62rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--gold);
-    border: 1px solid var(--border);
-    padding: 0.2rem 0.55rem;
-    margin-bottom: 0.75rem;
-  }
-  .blog-title {
-    font-family: 'Cinzel', serif;
-    font-size: 1rem;
-    color: var(--cream);
-    line-height: 1.4;
-    margin-bottom: 0.6rem;
-  }
-  .blog-excerpt {
-    font-size: 0.9rem;
-    color: var(--text-muted);
-    line-height: 1.6;
-  }
-  .blog-read {
-    display: inline-block;
-    margin-top: 1rem;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 0.72rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--gold);
-  }
-  @media (max-width: 680px) {
-    section > div > div[style*="grid-template-columns:1fr 1fr"] {
-      grid-template-columns: 1fr !important;
-    }
-  }
-</style>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="js/main.js?v=8"></script>
+<script src="js/main.js?v=9"></script>
 <script>
-function handleContactForm(btn) {
+function handleContact(btn) {
   btn.textContent = '✓ Message Sent!';
-  btn.style.background = '#3A7D44';
-  btn.style.color = 'var(--cream)';
+  btn.style.background = '#16a34a';
   btn.disabled = true;
-  showFlash('Thanks! Toby will be in touch soon.');
 }
 </script>
 </body>
