@@ -5,67 +5,158 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>The Gamer's Corner — Just for Fun Gaming</title>
   <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
   <style>
-    .blog-layout { display: grid; grid-template-columns: 1fr 280px; gap: 2rem; align-items: start; }
-    .blog-article {
-      margin-bottom: 3rem;
-      padding-bottom: 3rem;
-      border-bottom: 1px solid var(--border);
+    body { background: #f8f6f1; color: #1a1a2e; font-family: 'Nunito', sans-serif; }
+    nav.site-nav { background: #fff; border-bottom: 2px solid #e8e0d0; height: 68px; }
+    .nav-logo { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 1.1rem; line-height: 1.2; color: #2d1b69; text-decoration: none; }
+    .nav-logo span { color: #e85d04; }
+    .nav-links a { color: #444; }
+    .nav-links a:hover, .nav-links a.active { color: #2d1b69; }
+    .btn-nav { background: #2d1b69; color: #fff; border-radius: 24px; font-family: 'Nunito', sans-serif; font-weight: 700; }
+    .btn-nav:hover { background: #4a2fa0; }
+
+    /* BLOG HEADER */
+    .blog-hero {
+      background: linear-gradient(135deg, #2d1b69 0%, #1a1040 100%);
+      padding: 3rem 2rem;
+      text-align: center;
     }
-    .blog-article:last-child { border-bottom: none; }
+    .blog-hero-eyebrow {
+      display: inline-block;
+      background: #e85d04;
+      color: #fff;
+      font-weight: 800;
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.3rem 1rem;
+      border-radius: 24px;
+      margin-bottom: 1rem;
+    }
+    .blog-hero-title {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900;
+      font-size: clamp(2rem, 5vw, 3rem);
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+    .blog-hero-title span { color: #ffd166; }
+    .blog-hero-sub { color: rgba(255,255,255,0.75); font-size: 1rem; }
+
+    /* LAYOUT */
+    .blog-page { max-width: 1000px; margin: 0 auto; padding: 2.5rem 1.5rem; display: grid; grid-template-columns: 1fr 300px; gap: 2rem; align-items: start; }
+
+    /* ARTICLES */
+    .article-card {
+      background: #fff;
+      border: 2px solid #e8e0d0;
+      border-radius: 20px;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      transition: border-color 0.15s;
+    }
+    .article-card:hover { border-color: #2d1b69; }
     .article-tag {
       display: inline-block;
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 0.62rem;
-      letter-spacing: 0.18em;
+      background: #f0ecff;
+      color: #2d1b69;
+      font-size: 0.65rem;
+      font-weight: 800;
+      letter-spacing: 0.15em;
       text-transform: uppercase;
-      color: var(--gold);
-      border: 1px solid var(--border);
-      padding: 0.2rem 0.55rem;
-      margin-bottom: 0.75rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 24px;
+      margin-bottom: 0.85rem;
     }
+    .article-tag.community { background: #fff3e8; color: #e85d04; }
+    .article-tag.rpg { background: #e8f5e9; color: #1b5e20; }
+    .article-tag.news { background: #e3f2fd; color: #0d47a1; }
     .article-title {
-      font-family: 'Cinzel', serif;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900;
       font-size: 1.5rem;
-      color: var(--cream);
-      line-height: 1.35;
+      color: #1a1a2e;
+      line-height: 1.3;
       margin-bottom: 0.4rem;
+      text-decoration: none;
+      display: block;
     }
-    .article-title a { text-decoration: none; color: inherit; }
-    .article-title a:hover { color: var(--gold); }
+    .article-title:hover { color: #2d1b69; }
     .article-meta {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 0.68rem;
-      letter-spacing: 0.12em;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #999;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: var(--text-muted);
       margin-bottom: 1.25rem;
     }
-    .article-body { font-size: 1.05rem; color: var(--cream-dim); line-height: 1.85; }
+    .article-body { font-family: 'Crimson Pro', Georgia, serif; font-size: 1.1rem; color: #333; line-height: 1.85; }
     .article-body p { margin-bottom: 1rem; }
-    .article-body h3 {
-      font-family: 'Cinzel', serif;
-      font-size: 1.1rem;
-      color: var(--cream);
-      margin: 1.5rem 0 0.6rem;
-    }
+    .article-body h3 { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 1.1rem; color: #2d1b69; margin: 1.5rem 0 0.6rem; }
     .article-body ul { margin: 0 0 1rem 1.5rem; }
     .article-body li { margin-bottom: 0.4rem; }
-    .article-body strong { color: var(--cream); }
+    .article-body strong { color: #1a1a2e; font-weight: 700; }
+    .article-divider { border: none; border-top: 2px solid #e8e0d0; margin: 2rem 0; }
 
     /* SIDEBAR */
-    .sidebar-widget { background: var(--dark-card); border: 1px solid var(--border); margin-bottom: 1.25rem; }
-    .sw-head { background: var(--dark-surface); border-bottom: 1px solid var(--border); padding: 0.75rem 1rem; font-family: 'Cinzel', serif; font-size: 0.9rem; color: var(--cream); }
-    .sw-body { padding: 1rem; }
-    .recent-post { padding: 0.5rem 0; border-bottom: 1px solid rgba(201,168,76,0.08); }
-    .recent-post:last-child { border-bottom: none; }
-    .recent-post a { text-decoration: none; color: var(--cream-dim); font-size: 0.88rem; line-height: 1.4; display: block; }
-    .recent-post a:hover { color: var(--gold); }
-    .recent-post .rp-date { font-family: 'Barlow Condensed', sans-serif; font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-top: 0.2rem; }
-
-    @media (max-width: 700px) {
-      .blog-layout { grid-template-columns: 1fr; }
+    .sidebar-card {
+      background: #fff;
+      border: 2px solid #e8e0d0;
+      border-radius: 20px;
+      overflow: hidden;
+      margin-bottom: 1.25rem;
     }
+    .sidebar-head {
+      background: #2d1b69;
+      color: #fff;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.85rem 1.25rem;
+    }
+    .sidebar-body { padding: 1.25rem; }
+    .recent-post { padding: 0.6rem 0; border-bottom: 1px solid #f0ece4; }
+    .recent-post:last-child { border-bottom: none; }
+    .recent-post a { text-decoration: none; color: #333; font-size: 0.88rem; font-weight: 600; line-height: 1.4; display: block; }
+    .recent-post a:hover { color: #2d1b69; }
+    .recent-post-date { font-size: 0.68rem; font-weight: 700; color: #e85d04; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0.2rem; }
+    .newsletter-form .form-input-fun {
+      display: block; width: 100%; background: #f8f6f1; border: 2px solid #e8e0d0;
+      border-radius: 10px; color: #1a1a2e; font-family: 'Nunito', sans-serif;
+      font-size: 0.9rem; padding: 0.6rem 0.75rem; outline: none; margin-bottom: 0.6rem;
+      box-sizing: border-box; transition: border-color 0.2s;
+    }
+    .newsletter-form .form-input-fun:focus { border-color: #2d1b69; }
+    .btn-subscribe {
+      display: block; width: 100%; background: #e85d04; color: #fff;
+      font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.85rem;
+      border: none; padding: 0.65rem; border-radius: 32px; cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-subscribe:hover { background: #c94d00; }
+    .hours-list { font-size: 0.9rem; color: #333; line-height: 2; }
+    .hours-list strong { color: #2d1b69; font-weight: 800; }
+    .btn-reserve-side {
+      display: block; width: 100%; background: #2d1b69; color: #fff;
+      font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.82rem;
+      text-align: center; padding: 0.65rem; border-radius: 32px;
+      text-decoration: none; margin-top: 1rem; transition: background 0.2s;
+    }
+    .btn-reserve-side:hover { background: #4a2fa0; }
+
+    footer.site-footer { background: #1a1040; border-top: none; }
+    .footer-logo { color: #ffd166; font-family: 'Nunito', sans-serif; font-weight: 900; }
+    .footer-logo span { color: #a78bfa; }
+    .footer-details { color: rgba(255,255,255,0.6); }
+    .footer-details a { color: rgba(255,255,255,0.6); }
+    .footer-links a { color: rgba(255,255,255,0.5); }
+    .footer-links a:hover { color: #ffd166; }
+    .footer-copy { color: rgba(255,255,255,0.3); }
+
+    @media (max-width: 700px) { .blog-page { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -89,138 +180,142 @@
   <a href="index.html#contact">Contact</a>
 </div>
 
-<div class="page-wrap">
-  <p class="page-eyebrow">Just for Fun Gaming</p>
-  <h1 class="page-title">The Gamer's Corner</h1>
+<!-- BLOG HERO -->
+<div class="blog-hero">
+  <div class="blog-hero-eyebrow">📖 Just for Fun Gaming</div>
+  <h1 class="blog-hero-title">The <span>Gamer's</span> Corner</h1>
+  <p class="blog-hero-sub">Tips, guides, and stories from the tables at 130 Federal Road</p>
+</div>
 
-  <div class="blog-layout">
-    <!-- ARTICLES -->
-    <div>
+<div class="blog-page">
+  <!-- ARTICLES -->
+  <div>
 
-      <!-- ARTICLE 1 -->
-      <article class="blog-article" id="warhammer-beginners">
-        <span class="article-tag">Beginner Guide</span>
-        <h2 class="article-title"><a href="#warhammer-beginners">So You Want to Play Warhammer 40K — Where Do You Start?</a></h2>
-        <div class="article-meta">By Toby &nbsp;·&nbsp; May 22, 2026 &nbsp;·&nbsp; 5 min read</div>
-        <div class="article-body">
-          <p>Warhammer 40,000 is one of the most rewarding hobbies I've ever encountered. It's also, let's be honest, one of the most intimidating to walk into cold. Thousands of miniatures, dozens of factions, multiple editions, rules supplements — from the outside it looks like a wall of complexity.</p>
-          <p>Here's the truth: everybody who plays it started exactly where you are now. And the path in is much simpler than the shelf at a game store makes it look.</p>
+    <!-- ARTICLE 1 - NEW FULL POST -->
+    <article class="article-card" id="warhammer-beginners">
+      <span class="article-tag">Beginner Guide</span>
+      <a href="#warhammer-beginners" class="article-title">So You Want to Start Warhammer 40K — The Honest Beginner's Guide</a>
+      <div class="article-meta">By Toby &nbsp;·&nbsp; May 25, 2026 &nbsp;·&nbsp; 8 min read</div>
+      <div class="article-body">
+        <p>Let me be straight with you from the start.</p>
+        <p>Warhammer 40,000 is one of the most rewarding hobbies I've ever encountered. It's also one of the most intimidating to walk into cold. Thousands of miniatures. Dozens of factions. Multiple game systems. From the outside, it looks like a wall of complexity that only lifts for people who already know the secret handshake.</p>
+        <p>Here's what nobody tells you: every single person who plays this game started exactly where you are right now. Knowing nothing. Slightly overwhelmed. Wondering if it's worth it.</p>
+        <p>It is. And the path in is much simpler than it looks.</p>
 
-          <h3>Step 1: Pick a faction that excites you visually</h3>
-          <p>Don't worry about which faction is most powerful or most efficient. That changes with every update anyway. Instead, walk up to the display cases and ask yourself: which army do I want to spend hours painting?</p>
-          <p>Space Marines are the classic entry point — massive range, tons of player knowledge available, and they're forgiving to learn with. The Death Guard (Chaos Space Marines devoted to the god of disease) look absolutely spectacular. The Tyranids are a swarm of bio-organic alien horror. The Tau are for people who like shooting things from very far away. Whatever speaks to you aesthetically, start there.</p>
+        <h3>The hobby has three parts — you don't have to love all three</h3>
+        <p><strong>Building</strong> — assembling plastic miniatures. Satisfying in the same way a detailed model kit is. <strong>Painting</strong> — from quick tabletop-standard paint jobs to museum-quality display pieces. You choose how far you want to go. <strong>Playing</strong> — the actual game. Missions, objectives, dice rolls.</p>
+        <p>Some players buy pre-painted miniatures and only care about the game. Some build and paint obsessively and barely play. Most are somewhere in between. The hobby meets you where you are.</p>
 
-          <h3>Step 2: Buy a Combat Patrol box, not the whole army</h3>
-          <p>Games Workshop makes Combat Patrol boxes for most major factions. They're a curated starter set — enough models to play small introductory games, at a discount compared to buying separately. For around $110–130 you'll have 15–25 models and everything you need to learn the basics. Don't buy the full army yet. You'll have opinions after you play a few games that will change what you want.</p>
+        <h3>Before you buy anything — come play first</h3>
+        <p>This is the most important advice in this article. <strong>Don't spend a dollar until you've played a game.</strong></p>
+        <p>At Just for Fun Gaming, play time is free. We have demo models, we have tables, and we have people who know the game and are happy to walk a complete beginner through their first battle. It takes about an hour and costs you nothing except an evening.</p>
 
-          <h3>Step 3: Come play before you buy anything</h3>
-          <p>Seriously — at Just for Fun Gaming, intro sessions are free. Come in, pick up some painted demonstration models, and play a short game with someone who knows the rules. It's the fastest way to figure out if this is something you want to invest in, and it costs you nothing but an evening.</p>
+        <h3>Pick your first army</h3>
+        <p><strong>Rule one: pick the army whose models you think look the coolest.</strong> Not the most powerful in the current meta. The one that makes you think "I want to paint that."</p>
+        <p>Space Marines are the classic entry point. Death Guard are rotting and grotesque and somehow beautiful. Tyranids are a swarm of alien biological horrors. Tau win by shooting from maximum distance. Orks are chaotic, loud, and deeply fun. Necrons refuse to stay dead.</p>
 
-          <h3>The hobby has three parts — you don't have to love all three</h3>
-          <p>Building, painting, and playing are three distinct activities. Some people (like me) are deeply into all three. Some people buy pre-painted miniatures and just want to play. Some people build and paint meticulously and barely play at all. All of that is fine. Find your own corner of the hobby.</p>
+        <h3>What to buy first — the Combat Patrol box</h3>
+        <p>Games Workshop makes Combat Patrol boxes specifically for new players. Each contains a curated selection for one faction — enough to play small introductory games at a significant discount. Most run $110–130. Buy one. Build it. Come in and play.</p>
 
-          <p>Come by the store any Tuesday through Sunday and we'll get you started. No purchase necessary.</p>
-        </div>
-      </article>
+        <h3>Your first game</h3>
+        <p>Your first game will feel confusing. This is normal. There are a lot of rules and you won't remember all of them. By your third game, you'll feel like you know what you're doing. By your tenth, you'll have opinions about list-building. It happens faster than you'd expect.</p>
+        <p>Come into Just for Fun Gaming any Tuesday–Friday from 4:30 PM, or Saturday–Sunday from 3 PM. Tell us you want to learn 40K. We'll take it from there — for free.</p>
+      </div>
+    </article>
 
-      <!-- ARTICLE 2 -->
-      <article class="blog-article" id="local-game-stores">
-        <span class="article-tag">Community</span>
-        <h2 class="article-title"><a href="#local-game-stores">Why Local Game Stores Matter More Than Ever</a></h2>
-        <div class="article-meta">By Toby &nbsp;·&nbsp; May 21, 2026 &nbsp;·&nbsp; 4 min read</div>
-        <div class="article-body">
-          <p>Amazon will get you a board game in two days. Sometimes one. The price is usually fine. The convenience is undeniable.</p>
-          <p>What Amazon cannot do is introduce you to the three other people in your area who play the same obscure miniature wargame you just discovered. It cannot look at your half-painted army and tell you exactly which contrast paint will fix the problem you're having. It cannot host a Tuesday night campaign that becomes the highlight of your week. And it definitely cannot stay open until 10 PM so you can finish the final round of a game you've been playing for three hours.</p>
+    <hr class="article-divider">
 
-          <h3>The third place</h3>
-          <p>Sociologists talk about "third places" — spaces that aren't home and aren't work, where community actually forms. Bars used to be that. Coffee shops still are, sort of. Game stores, at their best, are one of the few genuinely welcoming third places left for people who don't drink.</p>
-          <p>That's what we're trying to build here. A place where you can show up not knowing anyone, sit down at a table, and leave with people you're going to see again next week.</p>
+    <!-- ARTICLE 2 -->
+    <article class="article-card" id="local-game-stores">
+      <span class="article-tag community">Community</span>
+      <a href="#local-game-stores" class="article-title">Why Local Game Stores Matter More Than Ever</a>
+      <div class="article-meta">By Toby &nbsp;·&nbsp; May 21, 2026 &nbsp;·&nbsp; 4 min read</div>
+      <div class="article-body">
+        <p>Amazon will get you a board game in two days. Sometimes one. The price is usually fine. The convenience is undeniable.</p>
+        <p>What Amazon cannot do is introduce you to the three other people in your area who play the same obscure miniature wargame you just discovered. It cannot look at your half-painted army and tell you exactly which contrast paint will fix the problem you're having. It cannot host a Tuesday night campaign that becomes the highlight of your week. And it definitely cannot stay open until 10 PM so you can finish the final round of a game you've been playing for three hours.</p>
 
-          <h3>The knowledge that lives in the room</h3>
-          <p>Every experienced player in a game store is a walking encyclopedia of tips that don't exist in any rulebook. The guy who's been playing BattleTech since 1990 knows the three mistakes every new player makes in their first campaign. The woman who's been running D&D campaigns for fifteen years has solved the problem you're having with your party dynamics a dozen times. That knowledge doesn't get Amazon two-day shipped. It lives in the room.</p>
+        <h3>The third place</h3>
+        <p>Sociologists talk about "third places" — spaces that aren't home and aren't work, where community actually forms. Game stores, at their best, are one of the few genuinely welcoming third places left for people who don't drink.</p>
+        <p>That's what we're trying to build here. A place where you can show up not knowing anyone, sit down at a table, and leave with people you're going to see again next week.</p>
 
-          <h3>Why we started Just for Fun Gaming</h3>
-          <p>I've been playing tabletop games my whole life. For years, I drove 45 minutes to the nearest game store. When that closed, I drove further. I kept thinking: Danbury deserves a place like this. So after a lot of planning, I stopped waiting for someone else to open it.</p>
-          <p>Play time is free because I want the barrier to entry to be zero. Come in. See if you like it. The community is the point — the snacks and game sales are just how we keep the lights on.</p>
-        </div>
-      </article>
+        <h3>Why we started Just for Fun Gaming</h3>
+        <p>I've been playing tabletop games my whole life. I kept thinking: Danbury deserves a place like this. So after a lot of planning, I stopped waiting for someone else to open it.</p>
+        <p>Play time is free because I want the barrier to entry to be zero. Come in. See if you like it. The community is the point — the snacks and game sales are just how we keep the lights on.</p>
+      </div>
+    </article>
 
-      <!-- ARTICLE 3 -->
-      <article class="blog-article" id="dnd-vs-pathfinder">
-        <span class="article-tag">Tabletop RPG</span>
-        <h2 class="article-title"><a href="#dnd-vs-pathfinder">D&amp;D vs Pathfinder: Which Is Right for Your Group?</a></h2>
-        <div class="article-meta">By Toby &nbsp;·&nbsp; May 20, 2026 &nbsp;·&nbsp; 6 min read</div>
-        <div class="article-body">
-          <p>Both Dungeons &amp; Dragons (5th Edition) and Pathfinder (2nd Edition) are excellent tabletop RPGs. They share the same DNA — both descend from the original D&amp;D of the 1970s — but they've evolved into genuinely different games that appeal to different kinds of players.</p>
-          <p>Here's an honest breakdown to help you pick.</p>
+    <hr class="article-divider">
 
-          <h3>D&D 5th Edition: accessibility first</h3>
-          <p>Fifth Edition was designed to bring in new players. Character creation is fast, the core rules fit in your head within a few sessions, and there's an enormous amount of free and paid material available — adventures, settings, character options. The Dungeon Master has a lot of latitude to make calls at the table, which keeps things moving but means rules consistency varies by group.</p>
-          <p><strong>Best for:</strong> New players, groups that want to focus more on story and roleplay than tactical optimization, and groups where the DM wants creative flexibility over strict rules structure.</p>
+    <!-- ARTICLE 3 -->
+    <article class="article-card" id="dnd-vs-pathfinder">
+      <span class="article-tag rpg">Tabletop RPG</span>
+      <a href="#dnd-vs-pathfinder" class="article-title">D&amp;D vs Pathfinder: Which Is Right for Your Group?</a>
+      <div class="article-meta">By Toby &nbsp;·&nbsp; May 20, 2026 &nbsp;·&nbsp; 6 min read</div>
+      <div class="article-body">
+        <p>Both Dungeons &amp; Dragons (5th Edition) and Pathfinder (2nd Edition) are excellent tabletop RPGs. They share the same DNA — both descend from the original D&amp;D of the 1970s — but they've evolved into genuinely different games.</p>
 
-          <h3>Pathfinder 2nd Edition: depth and precision</h3>
-          <p>Pathfinder 2e went in the opposite direction. The rules are comprehensive and precise — there's a right answer for most situations, and that consistency is the point. Character building is deep, with a feat-based system that rewards planning and lets you construct exactly the character you envision. Encounters are more tactically demanding.</p>
-          <p><strong>Best for:</strong> Players who enjoy optimizing characters, groups that want tactical combat with clear rules, and anyone who felt 5e was too loose or hand-wavy.</p>
+        <h3>D&amp;D 5th Edition: accessibility first</h3>
+        <p>Fifth Edition was designed to bring in new players. Character creation is fast, the core rules fit in your head within a few sessions, and there's an enormous amount of free material available. <strong>Best for:</strong> new players, groups that want to focus on story and roleplay, and DMs who want creative flexibility.</p>
 
-          <h3>The honest answer</h3>
-          <p>If you've never played a tabletop RPG: start with D&amp;D. The learning curve is gentler, there are more players and DMs to learn from, and you can always migrate to Pathfinder later once you know what you're looking for.</p>
-          <p>If you're an experienced player who burned out on 5e feeling shallow: Pathfinder 2e will absolutely reignite your enthusiasm. It rewards mastery in a way 5e doesn't.</p>
-          <p>If you want to try either before buying books: come to Just for Fun Gaming. We run intro sessions for both. Come play a session for free and let the game sell itself.</p>
+        <h3>Pathfinder 2nd Edition: depth and precision</h3>
+        <p>Pathfinder 2e went in the opposite direction. The rules are comprehensive and precise — there's a right answer for most situations. Character building is deep with a feat-based system that lets you construct exactly the character you envision. <strong>Best for:</strong> players who enjoy optimizing characters and want tactical combat with clear rules.</p>
 
-          <h3>One more thing</h3>
-          <p>Both games have thriving communities here. We have a regular Thursday night Pathfinder campaign that has room for one more player as of this writing. We also do monthly D&amp;D one-shots that are perfect for beginners — no commitment, just show up and play.</p>
-          <p>Sign up for the newsletter to be notified when spots open up. Or just come in and ask.</p>
-        </div>
-      </article>
+        <h3>The honest answer</h3>
+        <p>If you've never played a tabletop RPG: start with D&amp;D. If you're an experienced player who burned out on 5e feeling shallow: Pathfinder 2e will absolutely reignite your enthusiasm.</p>
+        <p>We run intro sessions for both at Just for Fun Gaming. Come play a session for free and let the game sell itself. We also have a regular Thursday night Pathfinder campaign with room for new players — sign up for the newsletter to get notified when spots open.</p>
+      </div>
+    </article>
 
+  </div>
+
+  <!-- SIDEBAR -->
+  <div>
+    <div class="sidebar-card">
+      <div class="sidebar-head">📬 Join the Community</div>
+      <div class="sidebar-body newsletter-form">
+        <p style="font-size:0.88rem;color:#555;margin-bottom:1rem;line-height:1.5;">Get store news, event announcements, and new post notifications.</p>
+        <input class="form-input-fun" type="text" placeholder="Your first name">
+        <input class="form-input-fun" type="email" placeholder="your@email.com">
+        <button class="btn-subscribe" onclick="handleSubscribe(this)">Subscribe Free →</button>
+        <p style="font-size:0.72rem;color:#999;text-align:center;margin-top:0.5rem;">No spam. Unsubscribe anytime.</p>
+      </div>
     </div>
 
-    <!-- SIDEBAR -->
-    <div>
-      <div class="sidebar-widget">
-        <div class="sw-head">Join the Community</div>
-        <div class="sw-body">
-          <p style="font-size:0.9rem; color:var(--cream-dim); line-height:1.6; margin-bottom:1rem;">Get store news, event announcements, and new post notifications.</p>
-          <div class="form-group">
-            <label class="form-label">Your Name</label>
-            <input class="form-input" type="text" placeholder="First name">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Email</label>
-            <input class="form-input" type="email" placeholder="you@example.com">
-          </div>
-          <button class="btn-primary" style="width:100%;" onclick="handleNewsletterSignup(this)">Subscribe</button>
-          <p style="font-size:0.78rem; color:var(--text-muted); font-style:italic; margin-top:0.5rem; text-align:center;">No spam. Unsubscribe any time.</p>
+    <div class="sidebar-card">
+      <div class="sidebar-head">📰 Recent Posts</div>
+      <div class="sidebar-body">
+        <div class="recent-post">
+          <a href="#warhammer-beginners">So You Want to Start Warhammer 40K</a>
+          <div class="recent-post-date">May 25, 2026</div>
+        </div>
+        <div class="recent-post">
+          <a href="#local-game-stores">Why Local Game Stores Matter</a>
+          <div class="recent-post-date">May 21, 2026</div>
+        </div>
+        <div class="recent-post">
+          <a href="#dnd-vs-pathfinder">D&amp;D vs Pathfinder</a>
+          <div class="recent-post-date">May 20, 2026</div>
         </div>
       </div>
+    </div>
 
-      <div class="sidebar-widget">
-        <div class="sw-head">Recent Posts</div>
-        <div class="sw-body">
-          <div class="recent-post">
-            <a href="#warhammer-beginners">So You Want to Play Warhammer 40K — Where Do You Start?<div class="rp-date">May 22, 2026</div></a>
-          </div>
-          <div class="recent-post">
-            <a href="#local-game-stores">Why Local Game Stores Matter More Than Ever<div class="rp-date">May 21, 2026</div></a>
-          </div>
-          <div class="recent-post">
-            <a href="#dnd-vs-pathfinder">D&amp;D vs Pathfinder: Which Is Right for Your Group?<div class="rp-date">May 20, 2026</div></a>
-          </div>
+    <div class="sidebar-card">
+      <div class="sidebar-head">🕐 Store Hours</div>
+      <div class="sidebar-body">
+        <div class="hours-list">
+          <strong>Tue – Fri</strong><br>4:30 PM – 10:00 PM<br>
+          <strong>Sat – Sun</strong><br>3:00 PM – 10:00 PM<br>
+          <em style="color:#999;font-size:0.85rem;">Closed Mondays</em>
         </div>
+        <a href="reserve.html" class="btn-reserve-side">Reserve a Table →</a>
       </div>
+    </div>
 
-      <div class="sidebar-widget">
-        <div class="sw-head">Store Hours</div>
-        <div class="sw-body">
-          <div style="font-size:0.9rem; color:var(--cream-dim); line-height:2.2;">
-            <div><strong style="color:var(--cream); font-family:'Barlow Condensed',sans-serif; font-size:0.72rem; letter-spacing:0.08em; text-transform:uppercase;">Tue–Fri</strong><br>4:30 PM – 10:00 PM</div>
-            <div style="margin-top:0.5rem;"><strong style="color:var(--cream); font-family:'Barlow Condensed',sans-serif; font-size:0.72rem; letter-spacing:0.08em; text-transform:uppercase;">Sat–Sun</strong><br>3:00 PM – 10:00 PM</div>
-            <div style="margin-top:0.5rem; font-style:italic; color:var(--text-muted);">Closed Mondays</div>
-          </div>
-          <div style="margin-top:1rem;">
-            <a href="reserve.html" class="btn-gold-outline">Reserve a Table →</a>
-          </div>
-        </div>
+    <div class="sidebar-card">
+      <div class="sidebar-head">📍 Find Us</div>
+      <div class="sidebar-body">
+        <p style="font-size:0.9rem;color:#333;line-height:1.7;margin-bottom:1rem;">130 Federal Road<br>Danbury, CT 06811<br><a href="tel:2039704873" style="color:#2d1b69;font-weight:700;">203-970-4873</a></p>
+        <a href="https://maps.google.com/?q=130+Federal+Rd+Danbury+CT" target="_blank" class="btn-reserve-side" style="background:#e85d04;">Get Directions →</a>
       </div>
     </div>
   </div>
@@ -240,14 +335,12 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="js/main.js?v=8"></script>
+<script src="js/main.js?v=9"></script>
 <script>
-function handleNewsletterSignup(btn) {
+function handleSubscribe(btn) {
   btn.textContent = '✓ You\'re on the list!';
-  btn.style.background = '#3A7D44';
-  btn.style.color = 'var(--cream)';
+  btn.style.background = '#16a34a';
   btn.disabled = true;
-  showFlash('Thanks for subscribing!');
 }
 </script>
 </body>
